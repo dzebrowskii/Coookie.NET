@@ -5,6 +5,20 @@ namespace WebApplication4.Models;
 public class Recipe
 {
     [Key]
-    private int RecipeId { get; set; }
+    public int RecipeId { get; set; }
     
+    [Required]
+    public string Name { get; set; }
+    
+    [Required]
+    public Ingredient Ingredient { get; set; }
+    
+    [StringLength(1000)]
+    private string Description { get; set; }
+    
+    // Relacja wiele-do-wielu z Ingredient
+    public virtual ICollection<Ingredient> Ingredients { get; set; }
+    
+    
+
 }
