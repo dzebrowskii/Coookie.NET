@@ -8,6 +8,12 @@ public class Ingredient
     [StringLength(255)]
     public string Name { get; set; }
     
+    // Relacja wiele-do-wielu z Recipe
     public virtual ICollection<Recipe> Recipes { get; set; }
+    
+    public Ingredient()
+    {
+        Recipes = new HashSet<Recipe>();
+    }
     
 }

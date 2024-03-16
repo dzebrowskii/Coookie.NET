@@ -10,15 +10,16 @@ public class Recipe
     [Required]
     public string Name { get; set; }
     
-    [Required]
-    public Ingredient Ingredient { get; set; }
-    
     [StringLength(1000)]
     private string Description { get; set; }
     
     // Relacja wiele-do-wielu z Ingredient
     public virtual ICollection<Ingredient> Ingredients { get; set; }
     
+    public Recipe()
+    {
+        Ingredients = new HashSet<Ingredient>();
+    }
     
 
 }

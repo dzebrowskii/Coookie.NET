@@ -27,11 +27,8 @@ public class ApplicationUser
 
     public ApplicationUser()
     {
+        // Inicjalizacja kolekcji przy tworzeniu nowej instancji ApplicationUser
         Friends = new HashSet<ApplicationUser>();
-    }
-    // DO Poprawy jak zainicjalizować te 2 listy ?
-    public Favorite_Recipes()
-    {
         Favorite_Recipes = new HashSet<Recipe>();
     }
     
