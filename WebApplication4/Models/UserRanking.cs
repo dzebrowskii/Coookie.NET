@@ -2,12 +2,14 @@
 
 namespace WebApplication4.Models;
 
-public class AppRating
+public class UserRanking
 {
     [Key]
     public Guid UserId { get; set; }
     public virtual User User { get; set; }
 
     [Required]
-    public int Value { get; set; }
+    public int RankPoints { get; set; }
+
+    public string Badges { get; set; }
 }

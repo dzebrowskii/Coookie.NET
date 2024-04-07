@@ -2,12 +2,13 @@
 
 namespace WebApplication4.Models;
 
-public class RecipeRanking
+public class RecipeIngredient
 {
     [Key]
     public Guid RecipeId { get; set; }
     public virtual Recipe Recipe { get; set; }
 
-    [Required]
-    public int Points { get; set; }
+    [Key]
+    public Guid IngredientId { get; set; }
+    public virtual Ingredient Ingredient { get; set; }
 }

@@ -1,19 +1,15 @@
-﻿namespace WebApplication4.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebApplication4.Models;
+
 public class Ingredient
 {
     [Key]
-    public int IngredientId { get; set; }
+    public Guid Id { get; set; }
 
-    [StringLength(255)]
+    [Required]
+    [StringLength(50, ErrorMessage = "Name cannot be longer than 50 characters.")]
     public string Name { get; set; }
-    
-    // Relacja wiele-do-wielu z Recipe
-    public virtual ICollection<Recipe> Recipes { get; set; }
-    
-    public Ingredient()
-    {
-        Recipes = new HashSet<Recipe>();
-    }
-    
+
+    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
 }

@@ -5,21 +5,15 @@ namespace WebApplication4.Models;
 public class Recipe
 {
     [Key]
-    public int RecipeId { get; set; }
-    
-    [Required]
-    public string Name { get; set; }
-    
-    [StringLength(1000)]
-    private string Description { get; set; }
-    
-    // Relacja wiele-do-wielu z Ingredient
-    public virtual ICollection<Ingredient> Ingredients { get; set; }
-    
-    public Recipe()
-    {
-        Ingredients = new HashSet<Ingredient>();
-    }
-    
+    public Guid Id { get; set; }
 
+    [Required]
+    [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
+    public string Name { get; set; }
+
+    [Required]
+    public string Description { get; set; }
+    
+    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+    public virtual ICollection<RecipeRanking> RecipeRatings { get; set; }
 }
