@@ -5,7 +5,7 @@ namespace WebApplication4.Models;
 public class UserRanking
 {
     [Key]
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public virtual User User { get; set; }
 
     [Required]

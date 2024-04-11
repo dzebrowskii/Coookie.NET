@@ -5,7 +5,7 @@ namespace WebApplication4.Models;
 public class Recipe
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]

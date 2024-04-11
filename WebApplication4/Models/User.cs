@@ -5,7 +5,7 @@ namespace WebApplication4.Models;
 public class User
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [EmailAddress]

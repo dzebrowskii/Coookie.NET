@@ -8,13 +8,13 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Recipe> Recipes { get; set; }
-    public DbSet<Ingredient> Ingredients { get; set; }
-    public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-    public DbSet<RecipeRanking> RecipeRankings { get; set; }
-    public DbSet<UserRanking> UserRankings { get; set; }
-    public DbSet<AppRating> AppRatings { get; set; }
+    public DbSet<User> User { get; set; }
+    public DbSet<Recipe> Recipe { get; set; }
+    public DbSet<Ingredient> Ingredient { get; set; }
+    public DbSet<RecipeIngredient> RecipeIngredient { get; set; }
+    public DbSet<RecipeRanking> RecipeRanking { get; set; }
+    public DbSet<UserRanking> UserRanking { get; set; }
+    public DbSet<AppRating> AppRating { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

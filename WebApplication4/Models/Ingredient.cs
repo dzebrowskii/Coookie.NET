@@ -5,7 +5,7 @@ namespace WebApplication4.Models;
 public class Ingredient
 {
     [Key]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(50, ErrorMessage = "Name cannot be longer than 50 characters.")]
