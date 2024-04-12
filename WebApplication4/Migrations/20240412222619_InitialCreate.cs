@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebApplication4.Migrations
 {
     /// <inheritdoc />
-    public partial class NewInitial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +32,7 @@ namespace WebApplication4.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserSurname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -50,17 +49,17 @@ namespace WebApplication4.Migrations
                 name: "AppRating",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    RatingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId1 = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppRating", x => x.UserId);
+                    table.PrimaryKey("PK_AppRating", x => x.RatingId);
                     table.ForeignKey(
-                        name: "FK_AppRating_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_AppRating_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -73,7 +72,7 @@ namespace WebApplication4.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -90,18 +89,16 @@ namespace WebApplication4.Migrations
                 name: "UserRanking",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId1 = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     RankPoints = table.Column<int>(type: "int", nullable: false),
-                    Badges = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Badges = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserRanking", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_UserRanking_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserRanking_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -112,15 +109,14 @@ namespace WebApplication4.Migrations
                 columns: table => new
                 {
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    IngredientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IngredientId1 = table.Column<int>(type: "int", nullable: false)
+                    IngredientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RecipeIngredient", x => new { x.RecipeId, x.IngredientId });
                     table.ForeignKey(
-                        name: "FK_RecipeIngredient_Ingredient_IngredientId1",
-                        column: x => x.IngredientId1,
+                        name: "FK_RecipeIngredient_Ingredient_IngredientId",
+                        column: x => x.IngredientId,
                         principalTable: "Ingredient",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -136,26 +132,31 @@ namespace WebApplication4.Migrations
                 name: "RecipeRanking",
                 columns: table => new
                 {
-                    RecipeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RecipeId1 = table.Column<int>(type: "int", nullable: false),
-                    Points = table.Column<int>(type: "int", nullable: false)
+                    RecipeId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeRanking", x => x.RecipeId);
+                    table.PrimaryKey("PK_RecipeRanking", x => new { x.RecipeId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_RecipeRanking_Recipe_RecipeId1",
-                        column: x => x.RecipeId1,
+                        name: "FK_RecipeRanking_Recipe_RecipeId",
+                        column: x => x.RecipeId,
                         principalTable: "Recipe",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecipeRanking_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppRating_UserId1",
+                name: "IX_AppRating_UserId",
                 table: "AppRating",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipe_UserId",
@@ -163,24 +164,19 @@ namespace WebApplication4.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredient_IngredientId1",
+                name: "IX_RecipeIngredient_IngredientId",
                 table: "RecipeIngredient",
-                column: "IngredientId1");
+                column: "IngredientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeRanking_RecipeId1",
+                name: "IX_RecipeRanking_UserId",
                 table: "RecipeRanking",
-                column: "RecipeId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_UserId",
                 table: "User",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRanking_UserId1",
-                table: "UserRanking",
-                column: "UserId1");
         }
 
         /// <inheritdoc />

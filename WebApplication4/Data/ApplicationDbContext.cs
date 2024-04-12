@@ -23,5 +23,8 @@ public class ApplicationDbContext : DbContext
         // Definiowanie klucza złożonego dla RecipeIngredient
         modelBuilder.Entity<RecipeIngredient>()
             .HasKey(ri => new { ri.RecipeId, ri.IngredientId });
+        
+        modelBuilder.Entity<RecipeRanking>()
+            .HasKey(rr => new { rr.RecipeId, rr.UserId });
     }
 }

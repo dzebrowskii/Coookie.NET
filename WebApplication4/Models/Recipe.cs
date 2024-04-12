@@ -1,19 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebApplication4.Models;
+using System.Collections.Generic;
+using WebApplication4.Models;
 
 public class Recipe
 {
     [Key]
     public int Id { get; set; }
 
-    [Required]
-    [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
+    [Required(ErrorMessage = "Recipe name is required.")]
+    [StringLength(100, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 100 characters.")]
     public string Name { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Description is required.")]
+    [StringLength(1000, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 1000 characters.")]
     public string Description { get; set; }
-    
-    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-    public virtual ICollection<RecipeRanking> RecipeRatings { get; set; }
+
+    public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
+    public virtual ICollection<RecipeRanking> RecipeRatings { get; set; } = new List<RecipeRanking>();
 }

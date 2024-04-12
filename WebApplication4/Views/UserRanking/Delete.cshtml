@@ -1,4 +1,4 @@
-@model Recipe
+@model WebApplication4.Models.UserRanking
 
 @{
     ViewData["Title"] = "Delete";
@@ -9,25 +9,31 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Recipe</h4>
+    <h4>UserRanking</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.User.Email)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.RankPoints)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.RankPoints)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Badges)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Badges)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UserId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

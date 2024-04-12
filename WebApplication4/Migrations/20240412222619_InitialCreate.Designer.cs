@@ -11,36 +11,64 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WebApplication4.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240407230139_NewInitial")]
-    partial class NewInitial
+    [Migration("20240412222619_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0-preview.2.24128.4")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApplication4.Models.AppRating", b =>
+            modelBuilder.Entity("Recipe", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("UserId1")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Recipe");
+                });
+
+            modelBuilder.Entity("WebApplication4.Models.AppRating", b =>
+                {
+                    b.Property<int>("RatingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingId"));
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
+                    b.HasKey("RatingId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AppRating");
                 });
@@ -63,47 +91,19 @@ namespace WebApplication4.Migrations
                     b.ToTable("Ingredient");
                 });
 
-            modelBuilder.Entity("WebApplication4.Models.Recipe", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Recipe");
-                });
-
             modelBuilder.Entity("WebApplication4.Models.RecipeIngredient", b =>
                 {
                     b.Property<int>("RecipeId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
-                    b.Property<Guid>("IngredientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("IngredientId1")
-                        .HasColumnType("int");
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
 
                     b.HasKey("RecipeId", "IngredientId");
 
-                    b.HasIndex("IngredientId1");
+                    b.HasIndex("IngredientId");
 
                     b.ToTable("RecipeIngredient");
                 });
@@ -111,20 +111,17 @@ namespace WebApplication4.Migrations
             modelBuilder.Entity("WebApplication4.Models.RecipeRanking", b =>
                 {
                     b.Property<int>("RecipeId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
-
-                    b.Property<int>("Points")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RecipeId1")
+                    b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("RecipeId");
+                    b.HasKey("RecipeId", "UserId");
 
-                    b.HasIndex("RecipeId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("RecipeRanking");
                 });
@@ -143,7 +140,8 @@ namespace WebApplication4.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -168,55 +166,48 @@ namespace WebApplication4.Migrations
             modelBuilder.Entity("WebApplication4.Models.UserRanking", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Badges")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("RankPoints")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId1")
-                        .HasColumnType("int");
-
                     b.HasKey("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("UserRanking");
                 });
 
-            modelBuilder.Entity("WebApplication4.Models.AppRating", b =>
-                {
-                    b.HasOne("WebApplication4.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebApplication4.Models.Recipe", b =>
+            modelBuilder.Entity("Recipe", b =>
                 {
                     b.HasOne("WebApplication4.Models.User", null)
                         .WithMany("FavoriteRecipes")
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("WebApplication4.Models.AppRating", b =>
+                {
+                    b.HasOne("WebApplication4.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WebApplication4.Models.RecipeIngredient", b =>
                 {
                     b.HasOne("WebApplication4.Models.Ingredient", "Ingredient")
                         .WithMany("RecipeIngredients")
-                        .HasForeignKey("IngredientId1")
+                        .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebApplication4.Models.Recipe", "Recipe")
+                    b.HasOne("Recipe", "Recipe")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -229,13 +220,21 @@ namespace WebApplication4.Migrations
 
             modelBuilder.Entity("WebApplication4.Models.RecipeRanking", b =>
                 {
-                    b.HasOne("WebApplication4.Models.Recipe", "Recipe")
+                    b.HasOne("Recipe", "Recipe")
                         .WithMany("RecipeRatings")
-                        .HasForeignKey("RecipeId1")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication4.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Recipe");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebApplication4.Models.User", b =>
@@ -249,23 +248,23 @@ namespace WebApplication4.Migrations
                 {
                     b.HasOne("WebApplication4.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebApplication4.Models.Ingredient", b =>
-                {
-                    b.Navigation("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("WebApplication4.Models.Recipe", b =>
+            modelBuilder.Entity("Recipe", b =>
                 {
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeRatings");
+                });
+
+            modelBuilder.Entity("WebApplication4.Models.Ingredient", b =>
+                {
+                    b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("WebApplication4.Models.User", b =>

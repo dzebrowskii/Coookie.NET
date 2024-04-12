@@ -8,25 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
-      <Folder Include="Views\Account\" />
-      <Folder Include="Views\Ingredient\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-preview.2.24128.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0-preview.2.24128.4">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-preview.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +16,26 @@
       <_ContentIncludedByDefault Remove="Views\User\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Views\User\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Views\User\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Recipe\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Recipe\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Recipe\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Recipe\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Recipe\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     </ItemGroup>
 
 </Project>
