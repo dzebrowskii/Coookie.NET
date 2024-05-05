@@ -2,7 +2,7 @@
 Lista funkcjonalności:
 1. znajdowanie przepisów na podstawie składników
 użytkownika
-2. rejestracja i logowanie
+2. ✅ **Rejestracja i logowanie**
 3. aktywacja konta za pomocą e-maila
 4. odzyskiwanie hasła za pomocą e-maila
 5. wyświetlanie danych zalogowanego użytkownika
