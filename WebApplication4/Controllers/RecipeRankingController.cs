@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +20,9 @@ namespace WebApplication4.Controllers
         // GET: RecipeRanking
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.RecipeRanking.Include(r => r.Recipe).Include(r => r.User);
+            var applicationDbContext = _context.RecipeRanking
+                .Include(r => r.Recipe)
+                .Include(r => r.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -54,21 +55,14 @@ namespace WebApplication4.Controllers
         }
 
         // POST: RecipeRanking/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RecipeId,UserId,Value")] RecipeRanking recipeRanking)
+        public async Task<IActionResult> Create(RecipeRanking recipeRanking)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(recipeRanking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", recipeRanking.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", recipeRanking.UserId);
-            return View(recipeRanking);
+            // Bez sprawdzania ModelState, dodaj obiekt bezpośrednio
+            _context.Add(recipeRanking);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: RecipeRanking/Edit/5
@@ -84,46 +78,39 @@ namespace WebApplication4.Controllers
             {
                 return NotFound();
             }
+
             ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", recipeRanking.RecipeId);
             ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", recipeRanking.UserId);
             return View(recipeRanking);
         }
 
         // POST: RecipeRanking/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RecipeId,UserId,Value")] RecipeRanking recipeRanking)
+        public async Task<IActionResult> Edit(int id, RecipeRanking recipeRanking)
         {
             if (id != recipeRanking.RecipeId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(recipeRanking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RecipeRankingExists(recipeRanking.RecipeId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(recipeRanking);
+                await _context.SaveChangesAsync();
             }
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", recipeRanking.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", recipeRanking.UserId);
-            return View(recipeRanking);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RecipeRankingExists(recipeRanking.RecipeId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: RecipeRanking/Delete/5

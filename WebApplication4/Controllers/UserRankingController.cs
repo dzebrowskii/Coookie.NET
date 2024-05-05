@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,20 +51,14 @@ namespace WebApplication4.Controllers
         }
 
         // POST: UserRanking/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,RankPoints,Badges")] UserRanking userRanking)
+        public async Task<IActionResult> Create(UserRanking userRanking)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(userRanking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", userRanking.UserId);
-            return View(userRanking);
+            // Dodaj dane bez sprawdzania walidacji
+            _context.Add(userRanking);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserRanking/Edit/5
@@ -86,39 +79,32 @@ namespace WebApplication4.Controllers
         }
 
         // POST: UserRanking/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,RankPoints,Badges")] UserRanking userRanking)
+        public async Task<IActionResult> Edit(int id, UserRanking userRanking)
         {
             if (id != userRanking.UserId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(userRanking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserRankingExists(userRanking.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(userRanking);
+                await _context.SaveChangesAsync();
             }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", userRanking.UserId);
-            return View(userRanking);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserRankingExists(userRanking.UserId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: UserRanking/Delete/5

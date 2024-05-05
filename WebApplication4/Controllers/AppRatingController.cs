@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,20 +51,14 @@ namespace WebApplication4.Controllers
         }
 
         // POST: AppRating/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RatingId,UserId,Value")] AppRating appRating)
+        public async Task<IActionResult> Create(AppRating appRating)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(appRating);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", appRating.UserId);
-            return View(appRating);
+            // Bez walidacji, po prostu dodaj do bazy danych
+            _context.Add(appRating);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AppRating/Edit/5
@@ -81,13 +74,12 @@ namespace WebApplication4.Controllers
             {
                 return NotFound();
             }
+
             ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", appRating.UserId);
             return View(appRating);
         }
 
         // POST: AppRating/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RatingId,UserId,Value")] AppRating appRating)
@@ -97,28 +89,23 @@ namespace WebApplication4.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(appRating);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AppRatingExists(appRating.RatingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(appRating);
+                await _context.SaveChangesAsync();
             }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", appRating.UserId);
-            return View(appRating);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AppRatingExists(appRating.RatingId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AppRating/Delete/5
@@ -155,6 +142,7 @@ namespace WebApplication4.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Sprawdza istnienie oceny w bazie danych
         private bool AppRatingExists(int id)
         {
             return _context.AppRating.Any(e => e.RatingId == id);
