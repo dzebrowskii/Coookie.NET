@@ -59,9 +59,46 @@ namespace WebApplication4.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login");
             }
             return View(user);
+        }
+        
+        public IActionResult Login()
+        {
+            return View();
+        }
+        
+        public IActionResult GuestApp()
+        {
+            return View();
+        }
+        
+        public IActionResult LoggedApp()
+        {
+            return View();
+        }
+        
+        // POST: Account/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(string email, string password)
+        {
+            // Znajdź użytkownika w bazie danych na podstawie podanego adresu e-mail
+            var user = _context.User.FirstOrDefault(u => u.Email == email);
+
+            // Sprawdź, czy użytkownik istnieje oraz czy hasło jest poprawne
+            if (user != null && user.Password == password)
+            {
+                // Pomyślne logowanie, przekieruj na stronę główną lub inną odpowiednią stronę
+                return RedirectToAction("LoggedApp");
+            }
+
+            // Dodaj komunikat o błędzie, jeśli dane logowania są nieprawidłowe
+            ModelState.AddModelError(string.Empty, "Invalid email or password.");
+
+            // Pozostań na stronie logowania i wyświetl komunikat
+            return View();
         }
 
         // GET: User/Edit/5

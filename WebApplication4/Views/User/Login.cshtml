@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<div style="text-align: center; margin-top: 100px;">
+    <form asp-action="Login" method="post">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="margin: 10px;">
+                <input type="email" class="form-control" name="email" placeholder="Email..." style="padding: 10px;" required />
+            </div>
+            <div style="margin: 10px;">
+                <input type="password" class="form-control" name="password" placeholder="Password..." style="padding: 10px;" required />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 150px;">Login</button>
+        </div>
+    </form>
+</div>
