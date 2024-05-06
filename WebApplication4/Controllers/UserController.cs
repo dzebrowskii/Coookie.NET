@@ -55,12 +55,23 @@ namespace WebApplication4.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Username,UserSurname,Password")] User user)
         {
+            // Sprawdź, czy podany adres e-mail już istnieje w bazie danych
+            var existingUser = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email);
+            if (existingUser != null)
+            {
+                // Dodaj komunikat o błędzie do ModelState
+                ModelState.AddModelError("Email", "An account with this email already exists.");
+            }
+
+            // Jeśli ModelState jest poprawne, dodaj nowego użytkownika do bazy danych
             if (ModelState.IsValid)
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Login");
             }
+
+            // Jeśli ModelState zawiera błędy, wróć do formularza rejestracji i wyświetl komunikaty
             return View(user);
         }
         
