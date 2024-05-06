@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
 {
@@ -150,6 +151,15 @@ namespace WebApplication4.Controllers
         private bool RecipeExists(int id)
         {
             return _context.Recipe.Any(e => e.Id == id);
+        }
+        
+        
+        private readonly RecipeScraper _scraper = new RecipeScraper();
+        // Dodaj metodę, która uruchomi scrapera
+        public async Task<IActionResult> Scrape()
+        {
+            await _scraper.ScrapeAsync(); // Uruchom metodę scrapera
+            return Content("Scraping wykonany."); // Zwróć komunikat po zakończeniu
         }
     }
 }
