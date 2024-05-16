@@ -1,5 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Guest App";
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Enter your ingredients";
 }
 
-<h2>Welcome to Guest App!</h2>
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="FindRecipes" method="post">
+    <div class="form-group">
+        <textarea name="ingredients" class="form-control" placeholder="Enter your ingredients GUEST"></textarea>
+        <input type="hidden" name="returnView" value="GuestApp" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Find your recipe" class="btn btn-primary" />
+    </div>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <h3>Matched Recipes:</h3>
+    <ul>
+        @foreach (var recipe in Model)
+        {
+            <li>@recipe</li>
+        }
+    </ul>
+}
