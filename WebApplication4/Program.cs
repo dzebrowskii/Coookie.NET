@@ -1,18 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplication4.Data;
+
+
+using WebApplication4.Models;
 using WebApplication4.Services;
+using WebApplication4.Configurations;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Dodajemy DbContext z konfiguracją połączenia do bazy danych
+
+// Dodaj usługę kontekstu bazy danych
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyAzureDb")));
 
+// Dodaj konfigurację SMTP
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddTransient<EmailService>();
 // Rejestrujemy RecipeScraper jako scoped service
 builder.Services.AddScoped<RecipeScraper>();
+
 
 var app = builder.Build();
 
