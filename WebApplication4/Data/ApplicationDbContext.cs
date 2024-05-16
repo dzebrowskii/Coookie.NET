@@ -26,5 +26,7 @@ public class ApplicationDbContext : DbContext
         
         modelBuilder.Entity<RecipeRanking>()
             .HasKey(rr => new { rr.RecipeId, rr.UserId });
+        
+        
     }
 }

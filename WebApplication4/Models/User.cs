@@ -22,9 +22,18 @@ public class User
 
     [Required(ErrorMessage = "Password is required.")]
     [DataType(DataType.Password)]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters long.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters long.")] 
     public string Password { get; set; }
+    
+    
+    public string? ActivationToken { get; set; }
+    public bool IsActive { get; set; } = false; // Domyślnie konto nieaktywne
+    
 
     public virtual ICollection<Recipe> FavoriteRecipes { get; set; } = new List<Recipe>();
     public virtual ICollection<User> Friends { get; set; } = new List<User>();
+    
+    
+    
+    
 }

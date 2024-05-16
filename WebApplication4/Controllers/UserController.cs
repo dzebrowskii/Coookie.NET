@@ -1,21 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication4.Models;
+using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
 {
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         // GET: User
@@ -32,8 +33,7 @@ namespace WebApplication4.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -49,66 +49,98 @@ namespace WebApplication4.Controllers
         }
 
         // POST: User/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Username,UserSurname,Password")] User user)
         {
-            // Sprawdź, czy podany adres e-mail już istnieje w bazie danych
+            user.ActivationToken = Guid.NewGuid().ToString();
+            user.IsActive = false;
+
             var existingUser = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (existingUser != null)
             {
-                // Dodaj komunikat o błędzie do ModelState
                 ModelState.AddModelError("Email", "An account with this email already exists.");
             }
 
-            // Jeśli ModelState jest poprawne, dodaj nowego użytkownika do bazy danych
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Login");
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    foreach (var error in modelStateVal.Errors)
+                    {
+                        Console.WriteLine($"Error in {modelStateKey}: {error.ErrorMessage}");
+                    }
+                }
+
+                return View(user);
             }
 
-            // Jeśli ModelState zawiera błędy, wróć do formularza rejestracji i wyświetl komunikaty
-            return View(user);
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+
+            await SendActivationEmail(user);
+
+            TempData["SuccessMessage"] = $"Account was created for {user.Email}. Please check your email to activate your account.";
+            return RedirectToAction("Login");
         }
-        
+
+        private async Task SendActivationEmail(User user)
+        {
+            var activationLink = Url.Action("ActivateAccount", "User", new { token = user.ActivationToken }, Request.Scheme);
+            string subject = "Account Activation";
+            string message = $"Please activate your account by clicking the following link: {activationLink}";
+            await _emailService.SendEmailAsync(user.Email, subject, message);
+        }
+
+        public async Task<IActionResult> ActivateAccount(string token)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.ActivationToken == token);
+            if (user == null)
+            {
+                return BadRequest("Invalid activation token.");
+            }
+
+            user.IsActive = true;
+            user.ActivationToken = null;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Account activated successfully.");
+        }
+
         public IActionResult Login()
         {
             return View();
         }
-        
+
         public IActionResult GuestApp()
         {
             return View();
         }
-        
+
         public IActionResult LoggedApp()
         {
             return View();
         }
-        
+
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login(string email, string password)
         {
-            // Znajdź użytkownika w bazie danych na podstawie podanego adresu e-mail
             var user = _context.User.FirstOrDefault(u => u.Email == email);
-
-            // Sprawdź, czy użytkownik istnieje oraz czy hasło jest poprawne
             if (user != null && user.Password == password)
             {
-                // Pomyślne logowanie, przekieruj na stronę główną lub inną odpowiednią stronę
+                if (!user.IsActive)
+                {
+                    ModelState.AddModelError(string.Empty, "Your account is not activated. Please check your email to activate your account.");
+                    return View();
+                }
                 return RedirectToAction("LoggedApp");
             }
 
-            // Dodaj komunikat o błędzie, jeśli dane logowania są nieprawidłowe
             ModelState.AddModelError(string.Empty, "Invalid email or password.");
-
-            // Pozostań na stronie logowania i wyświetl komunikat
             return View();
         }
 
@@ -129,8 +161,6 @@ namespace WebApplication4.Controllers
         }
 
         // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Email,Username,UserSurname,Password")] User user)
@@ -171,8 +201,7 @@ namespace WebApplication4.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
