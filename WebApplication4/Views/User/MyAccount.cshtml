@@ -1,0 +1,62 @@
+﻿@model WebApplication4.Models.User
+
+@{
+    ViewData["Title"] = "Your personal data";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="account-info">
+    <div class="form-group">
+        <label>Id:</label>
+        <input type="text" class="form-control" value="@Model.Id" readonly />
+    </div>
+    <div class="form-group">
+        <label>Username:</label>
+        <input type="text" class="form-control" value="@Model.Username" readonly />
+    </div>
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="text" class="form-control" value="@Model.Email" readonly />
+    </div>
+    <div class="form-group">
+        <label>UserSurname:</label>
+        <input type="text" class="form-control" value="@Model.UserSurname" readonly />
+    </div>
+
+    <div class="form-group">
+        <a href="@Url.Action("ChangePasswordLoggedUser", "User")" class="btn btn-warning">Change password</a>
+    </div>
+    <div class="form-group">
+        <a href="@Url.Action("ChangeEmail", "User")" class="btn btn-warning">Change email</a>
+    </div>
+    <div class="form-group">
+        <a href="@Url.Action("DeleteAccount", "User")" class="btn btn-danger">Delete account</a>
+    </div>
+</div>
+
+<style>
+    .account-info {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+    }
+</style>
