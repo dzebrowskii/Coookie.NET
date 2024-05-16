@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication4.Models;
 using WebApplication4.Services;
+using WebApplication4.ViewModels;
 
 namespace WebApplication4.Controllers
 {
@@ -228,6 +229,79 @@ namespace WebApplication4.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+        
+        // GET: User/ResetPassword
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        // POST: User/ResetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.User.FirstOrDefaultAsync(u => u.Email == model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "There is no account associated with this email.");
+                    return View(model);
+                }
+
+                var token = Guid.NewGuid().ToString();
+                user.ActivationToken = token; // Reusing ActivationToken for simplicity
+                await _context.SaveChangesAsync();
+
+                var resetLink = Url.Action("ChangePassword", "User", new { token = token }, Request.Scheme);
+                string subject = "Password Reset";
+                string message = $"Please reset your password by clicking the following link: {resetLink}";
+                await _emailService.SendEmailAsync(user.Email, subject, message);
+
+                TempData["SuccessMessage"] = "An email with a password reset link has been sent. Please check your inbox to reset your password.";
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+        // GET: User/ChangePassword
+        public IActionResult ChangePassword(string token)
+        {
+            var model = new ChangePasswordViewModel { Token = token };
+            return View();
+        }
+
+        // POST: User/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.User.FirstOrDefaultAsync(u => u.ActivationToken == model.Token);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid token.");
+                    return View();
+                }
+
+                user.Password = model.Password;
+                user.ActivationToken = null; // Clear the token
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Your password has been reset. Please log in with your new password.";
+                return RedirectToAction("Login");
+            }
+
+            return View();
         }
     }
 }
