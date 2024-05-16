@@ -45,5 +45,14 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Logged in as: @User.Identity.Name</p>
+}
+else
+{
+    <p>You are not logged in.</p>
+}
 </body>
 </html>

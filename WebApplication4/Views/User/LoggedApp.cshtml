@@ -6,6 +6,8 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<a href="@Url.Action("Menu", "User")" class="btn btn-warning">Option</a>
+
 <form asp-action="FindRecipes" method="post">
     <div class="form-group">
         <textarea name="ingredients" class="form-control" placeholder="Enter your ingredients"></textarea>

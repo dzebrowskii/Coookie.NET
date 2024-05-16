@@ -1,8 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using WebApplication4.Data;
-
-
-using WebApplication4.Models;
 using WebApplication4.Services;
 using WebApplication4.Configurations;
 
@@ -27,6 +24,16 @@ builder.Services.AddScoped<RecipeScraper>();
 //Rejestrujemy RecipeService jako scoper service
 builder.Services.AddScoped<RecipeService>();
 
+//Rejestracja userService
+builder.Services.AddScoped<UserService>();
+
+// Configure authentication and authorization
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>
+    {
+        config.Cookie.Name = "UserLoginCookie";
+        config.LoginPath = "/User/Login";
+    });
 
 var app = builder.Build();
 
@@ -43,6 +50,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
