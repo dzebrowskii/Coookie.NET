@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebApplication4.Data;
+using WebApplication4.Models;
+using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
 {
     public class RecipeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly RecipeScraper _scraper;
 
-        public RecipeController(ApplicationDbContext context)
+        // Konstruktor z wstrzykniętym ApplicationDbContext i RecipeScraper
+        public RecipeController(ApplicationDbContext context, RecipeScraper scraper)
         {
             _context = context;
+            _scraper = scraper;
         }
 
         // GET: Recipe
@@ -48,8 +53,6 @@ namespace WebApplication4.Controllers
         }
 
         // POST: Recipe/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Recipe recipe)
@@ -80,8 +83,6 @@ namespace WebApplication4.Controllers
         }
 
         // POST: Recipe/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Recipe recipe)
@@ -150,6 +151,13 @@ namespace WebApplication4.Controllers
         private bool RecipeExists(int id)
         {
             return _context.Recipe.Any(e => e.Id == id);
+        }
+
+        // Metoda do uruchomienia scraper
+        public async Task<IActionResult> Scrape()
+        {
+            await _scraper.ScrapeAsync();
+            return Content("Scraping wykonany.");
         }
     }
 }
