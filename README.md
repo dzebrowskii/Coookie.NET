@@ -5,7 +5,7 @@ użytkownika**
 2. ✅ **Rejestracja i logowanie**
 3. ✅ **aktywacja konta za pomocą e-maila**
 4. ✅ **odzyskiwanie hasła za pomocą e-maila**
-5. wyświetlanie danych zalogowanego użytkownika
+5. ✅ **wyświetlanie danych zalogowanego użytkownika**
 6. zmiana hasła e-maila i usuwanie konta użytkownika
 7. ✅ **baza danych z przepisami i składnikami**
 8. ✅ **scrapowanie przepisów**
