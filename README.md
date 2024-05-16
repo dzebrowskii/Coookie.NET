@@ -1,7 +1,7 @@
 ﻿# Coookie.NET
 Lista funkcjonalności:
-1. znajdowanie przepisów na podstawie składników
-użytkownika
+1. ✅ **znajdowanie przepisów na podstawie składników
+użytkownika**
 2. ✅ **Rejestracja i logowanie**
 3. ✅ **aktywacja konta za pomocą e-maila**
 4. ✅ **odzyskiwanie hasła za pomocą e-maila**
