@@ -13,11 +13,13 @@ namespace WebApplication4.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly EmailService _emailService;
+        private readonly RecipeService _recipeService;
 
-        public UserController(ApplicationDbContext context, EmailService emailService)
+        public UserController(ApplicationDbContext context, EmailService emailService, RecipeService recipeService)
         {
             _context = context;
             _emailService = emailService;
+            _recipeService = recipeService;
         }
 
         // GET: User
@@ -114,10 +116,26 @@ namespace WebApplication4.Controllers
         {
             return View();
         }
-
+        
+        // GET: User/GuestApp
         public IActionResult GuestApp()
         {
             return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> FindRecipes(string ingredients, string returnView)
+        {
+            var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
+
+            if (string.Equals(returnView, "LoggedApp", StringComparison.OrdinalIgnoreCase))
+            {
+                return View("LoggedApp", matchedRecipes);
+            }
+            else
+            {
+                return View("GuestApp", matchedRecipes);
+            }
         }
 
         public IActionResult LoggedApp()

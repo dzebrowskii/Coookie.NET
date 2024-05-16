@@ -20,8 +20,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Dodaj konfigurację SMTP
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddTransient<EmailService>();
-// Rejestrujemy RecipeScraper jako scoped service
+
+// Rejestrujemy RecipeScraper 
 builder.Services.AddScoped<RecipeScraper>();
+
+//Rejestrujemy RecipeService jako scoper service
+builder.Services.AddScoped<RecipeService>();
 
 
 var app = builder.Build();
