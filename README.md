@@ -3,12 +3,12 @@ Lista funkcjonalności:
 1. znajdowanie przepisów na podstawie składników
 użytkownika
 2. ✅ **Rejestracja i logowanie**
-3. ✅ **aktywacja konta za pomocą e-maila
+3. ✅ **aktywacja konta za pomocą e-maila**
 4. odzyskiwanie hasła za pomocą e-maila
 5. wyświetlanie danych zalogowanego użytkownika
 6. zmiana hasła e-maila i usuwanie konta użytkownika
 7. baza danych z przepisami i składnikami
-8. ✅ **scrapowanie przepisów
+8. ✅ **scrapowanie przepisów**
 9. zapisywanie i wyświetlanie ulubionych przepisów
 użytkownika
 10. analiza wykorzystania składników
