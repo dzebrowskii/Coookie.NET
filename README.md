@@ -7,7 +7,7 @@ użytkownika
 4. odzyskiwanie hasła za pomocą e-maila
 5. wyświetlanie danych zalogowanego użytkownika
 6. zmiana hasła e-maila i usuwanie konta użytkownika
-7. baza danych z przepisami i składnikami
+7. ✅ **baza danych z przepisami i składnikami**
 8. ✅ **scrapowanie przepisów**
 9. zapisywanie i wyświetlanie ulubionych przepisów
 użytkownika
