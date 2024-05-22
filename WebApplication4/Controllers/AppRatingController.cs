@@ -49,5 +49,12 @@ namespace WebApplication4.Controllers
             TempData["SuccessMessage"] = "Thank you for rating the app!";
             return RedirectToAction("Menu", "User");
         }
+        
+        // GET: AppRating
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.AppRating.Include(ar => ar.User).ToListAsync());
+        }
+        
     }
 }
