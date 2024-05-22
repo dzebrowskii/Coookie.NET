@@ -431,7 +431,7 @@ namespace WebApplication4.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Password changed successfully.";
+            TempData["PasswordChange"] = "Password changed successfully.";
             return RedirectToAction("MyAccount");
         }
 
@@ -447,10 +447,40 @@ namespace WebApplication4.Controllers
         public async Task<IActionResult> ChangeEmail(string newEmail)
         {
             var email = User.Identity.Name;
-            await _userService.ChangeEmailAsync(email, newEmail);
+            var user = await _userService.GetUserByEmailAsync(email);
 
-            return RedirectToAction("MyAccount");
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var existingUser = await _userService.GetUserByEmailAsync(newEmail);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "An account with this email already exists.");
+                return View();
+            }
+
+            user.ActivationToken = Guid.NewGuid().ToString();
+            user.Email = newEmail;
+            user.IsActive = false;
+
+            await _context.SaveChangesAsync();
+            await SendEmailChangeActivationEmail(user);
+
+            TempData["SuccessMessage"] = $"An email change confirmation link has been sent to {newEmail}. Please check your email to confirm the change.";
+            return RedirectToAction("Login");
         }
+        
+        private async Task SendEmailChangeActivationEmail(User user)
+        {
+            var activationLink = Url.Action("ActivateAccount", "User", new { token = user.ActivationToken }, Request.Scheme);
+            string subject = "Email Change Activation";
+            string message = $"Please confirm your email change by clicking the following link: {activationLink}";
+            await _emailService.SendEmailAsync(user.Email, subject, message);
+        }
+
+
 
         // GET: User/DeleteAccount
         public IActionResult DeleteAccount()

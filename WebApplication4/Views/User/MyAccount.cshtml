@@ -6,6 +6,13 @@
 
 <h2>@ViewData["Title"]</h2>
 
+@if (TempData["PasswordChange"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["PasswordChange"]
+    </div>
+}
+
 <div class="account-info">
     <div class="form-group">
         <label>Id:</label>
