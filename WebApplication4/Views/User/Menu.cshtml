@@ -3,6 +3,12 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
 
 <div class="menu">
     <a href="@Url.Action("MyAccount", "User")" class="menu-item">My Account</a>
@@ -11,7 +17,7 @@
     <button class="menu-item">Your Analysis</button>
     <button class="menu-item">Language</button>
     <button class="menu-item">Dark Mode</button>
-    <button class="menu-item">Rate App</button>
+    <a href="@Url.Action("Rate", "AppRating")" class="menu-item">Rate App</a>
     <button class="menu-item">Recommend App</button>
     <button class="menu-item">About App</button>
     <button class="menu-item">Help</button>
