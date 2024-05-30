@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model List<WebApplication4.Models.Recipe>
 
 @{
     ViewData["Title"] = "Enter your ingredients";
@@ -6,9 +6,11 @@
 
 <h2>@ViewData["Title"]</h2>
 
+
+
 <form asp-action="FindRecipes" method="post">
     <div class="form-group">
-        <textarea name="ingredients" class="form-control" placeholder="Enter your ingredients GUEST"></textarea>
+        <textarea name="ingredients" class="form-control" placeholder="Enter your ingredients"></textarea>
         <input type="hidden" name="returnView" value="GuestApp" />
     </div>
     <div class="form-group">
@@ -22,7 +24,9 @@
     <ul>
         @foreach (var recipe in Model)
         {
-            <li>@recipe</li>
+            <li>
+                @recipe.Description
+            </li>
         }
     </ul>
 }

@@ -139,15 +139,36 @@ namespace WebApplication4.Controllers
         {
             var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
 
-            if (string.Equals(returnView, "LoggedApp", StringComparison.OrdinalIgnoreCase))
+            if (User.Identity.IsAuthenticated)
             {
-                return View("LoggedApp", matchedRecipes);
+                if (string.Equals(returnView, "LoggedApp", StringComparison.OrdinalIgnoreCase))
+                {
+                    return View("LoggedApp", matchedRecipes);
+                }
             }
             else
             {
                 return View("GuestApp", matchedRecipes);
             }
+
+            // Domyślne przekierowanie, gdy nie zalogowano użytkownika
+            return View("GuestApp", matchedRecipes);
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveRecipe(int recipeId)
+        {
+            var email = User.Identity.Name;
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user != null)
+            {
+                await _recipeService.SaveRecipeAsync(user.Id, recipeId);
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
 
         public IActionResult LoggedApp()
         {
@@ -498,8 +519,30 @@ namespace WebApplication4.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        
+        public async Task<IActionResult> SavedRecipes()
+        {
+            var email = User.Identity.Name;
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user != null)
+            {
+                var savedRecipes = await _context.User
+                    .Where(u => u.Id == user.Id)
+                    .SelectMany(u => u.FavoriteRecipes)
+                    .ToListAsync();
+
+                return View(savedRecipes);
+            }
+
+            return View(new List<Recipe>());
+        }
 
 
 
     }
+    
+    
+    
+    
 }
