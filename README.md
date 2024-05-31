@@ -11,7 +11,7 @@ użytkownika**
 8. ✅ **scrapowanie przepisów**
 9. ✅ **zapisywanie i wyświetlanie ulubionych przepisów**
 użytkownika
-10. analiza wykorzystania składników
+10. ✅ **analiza wykorzystania składników**
 11. analiza spożytych kalorii
 12. analiza finansowa
 13. dodawanie znajomych
