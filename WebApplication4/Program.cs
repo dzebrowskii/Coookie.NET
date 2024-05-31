@@ -27,6 +27,10 @@ builder.Services.AddScoped<RecipeService>();
 //Rejestracja userService
 builder.Services.AddScoped<UserService>();
 
+// Register AnalysisService
+builder.Services.AddScoped<AnalysisService>();
+
+
 // Configure authentication and authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>

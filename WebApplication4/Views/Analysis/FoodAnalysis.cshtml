@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Food Analysis";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    After clicking the 'Generate Analysis' button, your individual analysis will be generated, showing how many times you used a given ingredient while cooking.
+</p>
+
+<form id="analysisForm" method="post" action="@Url.Action("FoodAnalysis2", "Analysis")">
+    <button type="submit" class="btn btn-primary">Generate Analysis</button>
+</form>
+
+<a href="@Url.Action("Menu", "User")" class="btn btn-secondary">Go Back</a>
+
+<div id="chartContainer" style="width: 100%; height: 500px; margin-top: 20px;"></div>
+
+@section Scripts {
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#analysisForm').submit(function(event) {
+                event.preventDefault();
+                $.post('@Url.Action("FoodAnalysis2", "Analysis")', function(data) {
+                    var ingredients = Object.keys(data);
+                    var counts = Object.values(data);
+
+                    var trace = {
+                        x: ingredients,
+                        y: counts,
+                        type: 'bar'
+                    };
+
+                    var layout = {
+                        title: 'Ingredients Usage',
+                        xaxis: { title: 'Ingredients' },
+                        yaxis: { title: 'Amount' }
+                    };
+
+                    Plotly.newPlot('chartContainer', [trace], layout);
+                });
+            });
+        });
+    </script>
+}

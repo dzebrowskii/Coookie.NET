@@ -24,6 +24,12 @@
         @TempData["SuccessMessage"]
     </div>
 }
+@if (TempData["NoResultsMessage"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["NoResultsMessage"]
+    </div>
+}
 
 @if (Model != null && Model.Count > 0)
 {

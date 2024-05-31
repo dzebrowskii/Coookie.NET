@@ -138,6 +138,11 @@ namespace WebApplication4.Controllers
         public async Task<IActionResult> FindRecipes(string ingredients, string returnView)
         {
             var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
+            
+            if (!matchedRecipes.Any())
+            {
+                TempData["NoResultsMessage"] = "Unfortunately, we have not matched any of the recipes to the given ingredients.";
+            }
 
             if (User.Identity.IsAuthenticated)
             {
@@ -536,6 +541,11 @@ namespace WebApplication4.Controllers
             }
 
             return View(new List<Recipe>());
+        }
+        
+        public IActionResult Analysis()
+        {
+            return View();
         }
 
 
