@@ -147,6 +147,26 @@ namespace WebApplication4.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        // GET: Recipe/AddRecipe
+        [HttpGet]
+        public IActionResult AddRecipe()
+        {
+            return View();
+        }
+
+        // POST: Recipe/AddRecipe
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRecipe([Bind("Name,Ingredients,Description")] Recipe recipe)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(recipe);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("LoggedApp", "User");
+            }
+            return View(recipe);
+        }
 
         private bool RecipeExists(int id)
         {
