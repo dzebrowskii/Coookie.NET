@@ -21,5 +21,8 @@ public class Recipe
     public virtual ICollection<RecipeRanking> RecipeRatings { get; set; } = new List<RecipeRanking>();
     
     // Właściwość dla relacji wiele-do-wielu z User
-        public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
+        
+    public int? Calories { get; set; } // Kalorie, opcjonalne
+    public decimal? Price { get; set; } // Cena, opcjonalne
 }

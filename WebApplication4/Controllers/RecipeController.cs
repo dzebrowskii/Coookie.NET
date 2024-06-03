@@ -55,7 +55,7 @@ namespace WebApplication4.Controllers
         // POST: Recipe/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Calories, Price")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
