@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using WebApplication4.Models;
+namespace WebApplication4.Models;
+
+
 
 public class Recipe
 {
@@ -17,4 +19,7 @@ public class Recipe
 
     public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
     public virtual ICollection<RecipeRanking> RecipeRatings { get; set; } = new List<RecipeRanking>();
+    
+    // Właściwość dla relacji wiele-do-wielu z User
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

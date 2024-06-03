@@ -42,4 +42,8 @@
       <PackageReference Include="MimeKit" Version="4.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\scripts\" />
+    </ItemGroup>
+
 </Project>

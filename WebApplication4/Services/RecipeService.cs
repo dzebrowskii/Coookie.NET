@@ -1,9 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebApplication4.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebApplication4.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.IO;
 
 namespace WebApplication4.Services
 {
@@ -16,9 +22,9 @@ namespace WebApplication4.Services
             _context = context;
         }
 
-        public async Task<List<string>> RecipeSearcher(string ingredients)
+        public async Task<List<Recipe>> RecipeSearcher(string ingredients)
         {
-            var matchedRecipes = new List<string>();
+            var matchedRecipes = new List<Recipe>();
             var ingList = ingredients.ToLower().Split().ToList(); // List of ingredients from input, lowercase
 
             var recipes = await _context.Recipe
@@ -33,16 +39,27 @@ namespace WebApplication4.Services
 
                 if (commonIngredients.Count == recipeIngredients.Count)
                 {
-                    matchedRecipes.Add(recipe.Description);
+                    matchedRecipes.Add(recipe);
                 }
-            }
-
-            if (matchedRecipes.Count == 0)
-            {
-                matchedRecipes.Add("Unfortunately, we have not matched any of the recipes to the given ingredients");
             }
 
             return matchedRecipes;
         }
+        
+        public async Task SaveRecipeAsync(int userId, int recipeId)
+        {
+            var user = await _context.User.Include(u => u.FavoriteRecipes).FirstOrDefaultAsync(u => u.Id == userId);
+            var recipe = await _context.Recipe.FindAsync(recipeId);
+
+            if (user != null && recipe != null && !user.FavoriteRecipes.Contains(recipe))
+            {
+                user.FavoriteRecipes.Add(recipe);
+                await _context.SaveChangesAsync();
+            }
+        }
+        
+        
+
     }
+
 }

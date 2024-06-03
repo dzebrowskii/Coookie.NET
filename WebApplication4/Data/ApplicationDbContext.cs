@@ -27,6 +27,14 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<RecipeRanking>()
             .HasKey(rr => new { rr.RecipeId, rr.UserId });
         
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.FavoriteRecipes)
+            .WithMany(r => r.Users)
+            .UsingEntity<Dictionary<string, object>>(
+                "UserRecipe",
+                j => j.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"),
+                j => j.HasOne<User>().WithMany().HasForeignKey("UserId"));
+        
         
     }
 }

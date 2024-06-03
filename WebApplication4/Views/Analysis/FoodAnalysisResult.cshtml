@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Food Analysis Result";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<img src="@ViewBag.ChartUrl" alt="Ingredient Usage Chart" />
+
+<a href="@Url.Action("Menu", "User")" class="btn btn-secondary">Go Back</a>

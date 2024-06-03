@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model List<WebApplication4.Models.Recipe>
 
 @{
     ViewData["Title"] = "Enter your ingredients";
@@ -18,15 +18,59 @@
     </div>
 </form>
 
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["NoResultsMessage"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["NoResultsMessage"]
+    </div>
+}
 
 @if (Model != null && Model.Count > 0)
 {
     <h3>Matched Recipes:</h3>
-    <ul>
+    <ul id="recipes-list">
         @foreach (var recipe in Model)
         {
-            <li>@recipe</li>
+            <li id="recipe-@recipe.Id">
+                @recipe.Description
+                <form class="save-recipe-form" data-recipe-id="@recipe.Id" style="display:inline;">
+                    <input type="hidden" name="recipeId" value="@recipe.Id" />
+                    <button type="submit" class="btn btn-secondary">Save Recipe</button>
+                </form>
+            </li>
         }
     </ul>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.save-recipe-form').on('submit', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var recipeId = form.data('recipe-id');
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SaveRecipe", "User")',
+                    data: form.serialize(),
+                    success: function (response) {
+                        $('#recipes-list').prepend('<div class="alert alert-success">Recipe saved successfully!</div>');
+                        setTimeout(function () {
+                            $('.alert').remove();
+                        }, 3000);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while saving the recipe.');
+                    }
+                });
+            });
+        });
+    </script>
 }

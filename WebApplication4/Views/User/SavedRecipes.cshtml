@@ -1,0 +1,21 @@
+﻿@model List<Recipe>
+
+@{
+    ViewData["Title"] = "Saved Recipes";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    <ul>
+        @foreach (var recipe in Model)
+        {
+            <li>@recipe.Description</li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no saved recipes.</p>
+}
