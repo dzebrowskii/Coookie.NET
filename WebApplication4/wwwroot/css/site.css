@@ -20,3 +20,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar {
+  background-color: #FFA500; /* Dopasuj kolor do tła */
+  border: none;
+}
+
+.navbar-brand {
+  position: absolute;
+  right: 650px; /* Dostosuj odległość od lewej krawędzi */
+  bottom: 50px; /* Dostosuj odległość od górnej krawędzi */
+  font-size: 1.5em;
+  color: white; /* Kolor tekstu */
+  text-decoration: none;
+}
+
+.navbar-brand:hover {
+  color: white; /* Kolor tekstu przy najechaniu */
+  text-decoration: none;
+}

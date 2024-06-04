@@ -40,9 +40,34 @@ button.accept-policy {
 }
 
 .footer {
-  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: black !important;
+  border: none;
+  box-shadow: none;
+  padding: 10px;
+  background-color: #faf6f1; /* Dopasowanie tła stopki do reszty strony */
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  border: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
 }
+
+.footer a {
+  
+  text-decoration: none !important;
+  color: black !important;
+  margin-left: 10px;
+  
+}
+
+.footer span, .footer a {
+  margin-right: 10px; /* Dodanie odstępów między elementami */
+}
+

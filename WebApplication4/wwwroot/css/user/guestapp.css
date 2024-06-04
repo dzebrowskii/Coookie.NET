@@ -1,0 +1,22 @@
+﻿body {
+    background: #faf6f1; /* Jasne tło */
+    
+}
+
+.navbar {
+    margin-top: 80px;
+    margin-right: 750px;
+    background-color: #faf6f1 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.navbar-brand {
+    position: absolute;
+    right: 650px; /* Dostosuj odległość od lewej krawędzi */
+    bottom: 50px; /* Dostosuj odległość od górnej krawędzi */
+    font-size: 1.5em;
+    color: white; /* Kolor tekstu */
+    text-decoration: none;
+}
+
+
