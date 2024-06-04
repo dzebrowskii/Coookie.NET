@@ -30,6 +30,10 @@ builder.Services.AddScoped<UserService>();
 // Register AnalysisService
 builder.Services.AddScoped<AnalysisService>();
 
+//Rejestracja FriendService
+builder.Services.AddScoped<FriendService>();
+
+
 
 // Configure authentication and authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
