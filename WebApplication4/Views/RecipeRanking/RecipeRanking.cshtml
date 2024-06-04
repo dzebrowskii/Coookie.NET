@@ -1,7 +1,76 @@
-﻿@model WebApplication4.Models.RecipeRanking
+﻿@model IEnumerable<WebApplication4.Models.Recipe>
 
 @{
-    ViewData["Title"] = "Recipe Ranking";
-    
+    ViewData["Title"] = "Ranking Przepisów";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div> Recipe ranking</div>
+
+<h2>Ranking Przepisów</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Place in the ranking</th>
+            <th>Recipe name</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+     @{
+            var place = 1;
+     }
+    @foreach (var recipe in Model)
+    {
+        <tr>
+            <td>@place</td>
+            <td><a href="#" class="recipe-link" data-id="@recipe.Id">@recipe.Name</a></td>
+            <td>@recipe.Points</td>
+        </tr>
+        place++;
+    }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="recipeModal" tabindex="-1" role="dialog" aria-labelledby="recipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recipeModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Description:</strong> <span id="recipeDescription"></span></p>
+                <p><strong>Ingredients:</strong></p>
+                <ul id="recipeIngredients"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.recipe-link').on('click', function(event) {
+                event.preventDefault();
+                var recipeId = $(this).data('id');
+                $.get('/RecipeRanking/GetRecipeDetails/' + recipeId, function(data) {
+                    $('#recipeModalLabel').text(data.name);
+                    $('#recipeDescription').text(data.description);
+
+                    var ingredientsList = $('#recipeIngredients');
+                    ingredientsList.empty();
+                    data.ingredients.forEach(function(ingredient) {
+                        ingredientsList.append('<li>' + ingredient + '</li>');
+                    });
+
+                    $('#recipeModal').modal('show');
+                });
+            });
+        });
+    </script>
+}

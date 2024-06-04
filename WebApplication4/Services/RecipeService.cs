@@ -54,6 +54,7 @@ namespace WebApplication4.Services
             if (user != null && recipe != null && !user.FavoriteRecipes.Contains(recipe))
             {
                 recipe.DateSaved = DateTime.Now;
+                recipe.Points += 1;
                 user.FavoriteRecipes.Add(recipe);
                 await _context.SaveChangesAsync();
             }
