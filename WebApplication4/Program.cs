@@ -12,7 +12,8 @@ builder.Services.AddControllersWithViews();
 
 // Dodaj usługę kontekstu bazy danych
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyAzureDb")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyAzureDb"),
+    sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
 // Dodaj konfigurację SMTP
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));

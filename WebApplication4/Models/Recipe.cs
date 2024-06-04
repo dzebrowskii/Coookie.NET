@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 namespace WebApplication4.Models;
+
 
 
 
@@ -25,4 +27,6 @@ public class Recipe
         
     public int? Calories { get; set; } // Kalorie, opcjonalne
     public decimal? Price { get; set; } // Cena, opcjonalne
+    
+    public DateTime? DateSaved { get; set; }
 }

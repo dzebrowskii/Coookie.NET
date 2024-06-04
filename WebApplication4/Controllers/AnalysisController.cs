@@ -1,6 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebApplication4.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using WebApplication4.Services;
+using WebApplication4.Models;
+
 
 namespace WebApplication4.Controllers
 {
@@ -36,5 +44,67 @@ namespace WebApplication4.Controllers
 
             return Json(ingredientUsage);
         }
+        
+        [HttpGet]
+        public IActionResult FinancialAnalysis()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> GenerateFinancialAnalysis()
+        {
+            try
+            {
+                var email = User.Identity.Name;
+                var user = await _userService.GetUserByEmailAsync(email);
+        
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+                var data = await _analysisService.GenerateFinancialAnalysisDataAsync(user.Id);
+
+                // Konwersja danych do odpowiedniego formatu
+                var analysisData = data
+                    .Select(d => new 
+                    { 
+                        date = d.Key, 
+                        amount = d.Value 
+                    })
+                    .ToList();
+
+                // Logowanie danych
+                Console.WriteLine("Data to be sent to client:");
+                foreach (var item in analysisData)
+                {
+                    Console.WriteLine($"{item.date}: {item.amount}");
+                }
+
+                return Json(analysisData);
+            }
+            catch (Exception ex)
+            {
+                // Logowanie wyjątku
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
     }
 }

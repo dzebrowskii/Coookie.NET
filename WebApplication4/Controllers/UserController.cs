@@ -543,6 +543,16 @@ namespace WebApplication4.Controllers
             return View(new List<Recipe>());
         }
         
+        [HttpPost]
+        public async Task<IActionResult> RemoveFavoriteRecipe(int recipeId)
+        {
+            var email = User.Identity.Name;
+            var userId = await _userService.GetUserByEmailAsync(email);
+            await _recipeService.RemoveFavoriteRecipeAsync(userId.Id, recipeId);
+            return RedirectToAction("SavedRecipes");
+        }
+
+        
         public IActionResult Analysis()
         {
             return View();

@@ -3,6 +3,13 @@ using System.Threading.Tasks;
 using WebApplication4.Models;
 using WebApplication4.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using WebApplication4.Models;
+
 
 namespace WebApplication4.Services
 {
@@ -43,5 +50,44 @@ namespace WebApplication4.Services
 
             return ingredientCounts;
         }
+        
+        public async Task<Dictionary<string, decimal>> GenerateFinancialAnalysisDataAsync(int userId)
+        {
+            var user = await _context.User
+                .Include(u => u.FavoriteRecipes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            
+            Console.WriteLine("Favorite Recipes Count: " + user.FavoriteRecipes.Count);
+            
+            foreach (var recipe in user.FavoriteRecipes)
+            {
+                Console.WriteLine($"Recipe: {recipe.Name}, Price: {recipe.Price}, DateSaved: {recipe.DateSaved}");
+            }
+
+            var analysisData = user.FavoriteRecipes
+                .Where(r => r.DateSaved.HasValue && r.Price.HasValue)
+                .GroupBy(r => r.DateSaved.Value.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    TotalPrice = g.Sum(r => r.Price.Value)
+                })
+                .ToDictionary(x => x.Date.ToString("yyyy-MM-dd"), x => x.TotalPrice);
+
+            // Logowanie danych
+            Console.WriteLine("Analysis Data:");
+            foreach (var item in analysisData)
+            {
+                Console.WriteLine($"{item.Key}: {item.Value}");
+            }
+
+            return analysisData;
+        }
+
     }
 }

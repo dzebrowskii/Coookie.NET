@@ -53,10 +53,25 @@ namespace WebApplication4.Services
 
             if (user != null && recipe != null && !user.FavoriteRecipes.Contains(recipe))
             {
+                recipe.DateSaved = DateTime.Now;
                 user.FavoriteRecipes.Add(recipe);
                 await _context.SaveChangesAsync();
             }
         }
+        
+        public async Task RemoveFavoriteRecipeAsync(int userId, int recipeId)
+        {
+            var user = await _context.User.Include(u => u.FavoriteRecipes).FirstOrDefaultAsync(u => u.Id == userId);
+            var recipe = await _context.Recipe.FindAsync(recipeId);
+
+            if (user != null && recipe != null && user.FavoriteRecipes.Contains(recipe))
+            {
+                user.FavoriteRecipes.Remove(recipe);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        
         
         
 
