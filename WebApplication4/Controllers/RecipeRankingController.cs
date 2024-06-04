@@ -153,11 +153,36 @@ namespace WebApplication4.Controllers
             return _context.RecipeRanking.Any(e => e.RecipeId == id);
         }
         
-        public IActionResult RecipeRanking()
+        // Akcja do wyświetlania rankingu przepisów
+        public async Task<IActionResult> RecipeRanking()
         {
-            
-            return View();
+            var recipes = await _context.Recipe
+                .OrderByDescending(r => r.Points)
+                .ToListAsync();
+            return View(recipes);
         }
+        public async Task<IActionResult> GetRecipeDetails(int id)
+        {
+            var recipe = await _context.Recipe
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            var recipeDetails = new
+            {
+                name = recipe.Name,
+                description = recipe.Description,
+                ingredients = recipe.RecipeIngredients.Select(ri => ri.Ingredient.Name).ToList()
+            };
+
+            return Json(recipeDetails);
+        }
+
         
     }
 }

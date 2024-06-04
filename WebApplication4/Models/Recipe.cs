@@ -27,6 +27,7 @@ public class Recipe
         
     public int? Calories { get; set; } // Kalorie, opcjonalne
     public decimal? Price { get; set; } // Cena, opcjonalne
+    public int? Points { get; set; }
     
     public DateTime? DateSaved { get; set; }
 }

@@ -108,13 +108,18 @@ namespace WebApplication4.Services
                     // Utwórz RecipeIngredient
                     recipeIngredientEntities.Add(new RecipeIngredient { Ingredient = ingredient });
                 }
-
+                
+                // Do kalorii
+                var random = new Random();
                 // Utwórz nowy obiekt Recipe i dodaj go do kontekstu
                 Recipe recipe = new Recipe
                 {
                     Name = recipeName,
                     Description = combinedInstructions,
-                    RecipeIngredients = recipeIngredientEntities
+                    RecipeIngredients = recipeIngredientEntities,
+                    Calories = random.Next(1000,4001),
+                    Price = random.Next(10,101),
+                    Points = 0
                 };
 
                 _context.Recipe.Add(recipe);
