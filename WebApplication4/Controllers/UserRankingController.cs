@@ -145,5 +145,11 @@ namespace WebApplication4.Controllers
         {
             return _context.UserRanking.Any(e => e.UserId == id);
         }
+        public IActionResult UserRanking()
+             {
+                 return View();
+             }
     }
+    
+    
 }

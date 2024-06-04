@@ -152,5 +152,12 @@ namespace WebApplication4.Controllers
         {
             return _context.RecipeRanking.Any(e => e.RecipeId == id);
         }
+        
+        public IActionResult RecipeRanking()
+        {
+            
+            return View();
+        }
+        
     }
 }
