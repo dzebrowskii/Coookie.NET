@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Caloric Analysis";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    After clicking the 'Generate Analysis' button, your caloric analysis will be generated, showing the total calories of saved recipes for each day.
+</p>
+
+<form id="analysisForm" method="post" action="@Url.Action("GenerateCaloricAnalysis", "Analysis")">
+    <button type="submit" class="btn btn-primary">Generate Analysis</button>
+</form>
+
+<a href="@Url.Action("Menu", "User")" class="btn btn-secondary">Go Back</a>
+
+<div id="chartContainer" style="width: 100%; height: 500px; margin-top: 20px;"></div>
+
+@section Scripts {
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#analysisForm').submit(function(event) {
+                event.preventDefault();
+                $.post('@Url.Action("GenerateCaloricAnalysis", "Analysis")', function(data) {
+                    if (!Array.isArray(data)) {
+                        console.error("Data is not an array:", data);
+                        return;
+                    }
+
+                    console.log("Analysis Data:");
+                    console.log(data);
+
+                    var dates = data.map(item => item.date);
+                    var calories = data.map(item => item.amount);
+
+                    var trace = {
+                        x: dates,
+                        y: calories,
+                        type: 'bar'
+                    };
+
+                    var layout = {
+                        title: 'Caloric Analysis',
+                        xaxis: {
+                            title: 'Date',
+                            tickformat: '%Y-%m-%d',
+                            dtick: 86400000, // One day in milliseconds
+                            tickvals: dates,
+                            ticktext: dates.map(date => new Date(date).toLocaleDateString())
+                        },
+                        yaxis: { title: 'Total Calories' }
+                    };
+
+                    Plotly.newPlot('chartContainer', [trace], layout);
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error occurred during analysis generation:", textStatus, errorThrown);
+                });
+            });
+        });
+    </script>
+}

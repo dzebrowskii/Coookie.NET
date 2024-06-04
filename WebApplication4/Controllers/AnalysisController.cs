@@ -50,6 +50,11 @@ namespace WebApplication4.Controllers
         {
             return View();
         }
+        
+        public IActionResult CaloricAnalysis()
+        {
+            return View();
+        }
 
         [HttpPost]
         [HttpPost]
@@ -88,6 +93,40 @@ namespace WebApplication4.Controllers
             catch (Exception ex)
             {
                 // Logowanie wyjątku
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> GenerateCaloricAnalysis()
+        {
+            try
+            {
+                var email = User.Identity.Name;
+                var user = await _userService.GetUserByEmailAsync(email);
+
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+                var data = await _analysisService.GenerateCaloricAnalysisDataAsync(user.Id);
+                
+                var analysisData = data
+                    .Select(d => new
+                    {
+                        date = d.Key,
+                        amount = d.Value
+                    })
+                    .ToList();
+
+                return Json(analysisData);
+
+                
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
