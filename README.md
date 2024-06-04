@@ -13,7 +13,7 @@ użytkownika**
 użytkownika
 10. ✅ **analiza wykorzystania składników**
 11. analiza spożytych kalorii
-12. analiza finansowa
+12. ✅ **analiza finansowa**
 13. ✅ **dodawanie znajomych**
 14. ✅ **ocenianie aplikacji**
 15. rekomendacja aplikacji
