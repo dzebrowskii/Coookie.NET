@@ -32,6 +32,7 @@ public class User
 
     public virtual ICollection<Recipe> FavoriteRecipes { get; set; } = new List<Recipe>();
     public virtual ICollection<User> Friends { get; set; } = new List<User>();
+    public virtual ICollection<FriendRequest> FriendRequests { get; set; } = new List<FriendRequest>();
     
     
     

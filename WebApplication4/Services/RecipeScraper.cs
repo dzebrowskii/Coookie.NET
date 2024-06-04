@@ -67,6 +67,7 @@ namespace WebApplication4.Services
                 foreach (var x in ingredientsNodes)
                 {
                     string ingredientText = x.InnerText.Trim();
+                    ingredientText = System.Text.RegularExpressions.Regex.Replace(ingredientText, @"\d", string.Empty);
                     recipeIngredients.Add(ingredientText);
                     Console.WriteLine(ingredientText);
                 }

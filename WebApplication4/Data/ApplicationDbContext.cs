@@ -15,6 +15,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<RecipeRanking> RecipeRanking { get; set; }
     public DbSet<UserRanking> UserRanking { get; set; }
     public DbSet<AppRating> AppRating { get; set; }
+    
+    public DbSet<FriendRequest> FriendRequest { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,6 +38,17 @@ public class ApplicationDbContext : DbContext
                 j => j.HasOne<Recipe>().WithMany().HasForeignKey("RecipeId"),
                 j => j.HasOne<User>().WithMany().HasForeignKey("UserId"));
         
+        modelBuilder.Entity<FriendRequest>()
+            .HasOne(fr => fr.FromUser)
+            .WithMany(u => u.FriendRequests)
+            .HasForeignKey(fr => fr.FromUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<FriendRequest>()
+            .HasOne(fr => fr.ToUser)
+            .WithMany()
+            .HasForeignKey(fr => fr.ToUserId)
+            .OnDelete(DeleteBehavior.Restrict);
         
     }
 }

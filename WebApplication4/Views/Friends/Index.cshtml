@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Friends";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<a href="@Url.Action("ShowFriends", "Friends")" class="btn btn-primary">Show Friends</a>
+<a href="@Url.Action("AddFriend", "Friends")" class="btn btn-primary">Add Friend</a>
+<a href="@Url.Action("Requests", "Friends")" class="btn btn-primary">Friend Requests</a>
+<a href="@Url.Action("Menu", "User")" class="btn btn-secondary">Go Back</a>
+
+<style>
+    .btn {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        text-align: center;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
