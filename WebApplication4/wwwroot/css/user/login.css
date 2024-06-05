@@ -18,3 +18,8 @@
     color: white; /* Kolor tekstu */
     text-decoration: none;
 }
+
+.no-underline {
+    text-decoration: none;
+    color: inherit; /* Opcjonalnie, aby zachować domyślny kolor tekstu */
+}
