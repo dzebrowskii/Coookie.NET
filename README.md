@@ -16,9 +16,9 @@ użytkownika
 12. ✅ **analiza finansowa**
 13. ✅ **dodawanie znajomych**
 14. ✅ **ocenianie aplikacji**
-15. rekomendacja aplikacji
+15. ✅ **rekomendacja aplikacji**
 16. dark mode
 17. ✅ **dodawanie własnych przepisów**
-18. ranking użytkowników z odznakami
+18. ✅ **ranking użytkowników z odznakami**
 19. Transport danych do excela
 20. ✅ **Ranking przepisów**
