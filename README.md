@@ -9,8 +9,8 @@ użytkownika**
 6. ✅ **zmiana hasła e-maila i usuwanie konta użytkownika**
 7. ✅ **baza danych z przepisami i składnikami**
 8. ✅ **scrapowanie przepisów**
-9. ✅ **zapisywanie i wyświetlanie ulubionych przepisów**
-użytkownika
+9. ✅ **zapisywanie i wyświetlanie ulubionych przepisów
+użytkownika**
 10. ✅ **analiza wykorzystania składników**
 11. ✅ **analiza spożytych kalorii**
 12. ✅ **analiza finansowa**
@@ -20,5 +20,5 @@ użytkownika
 16. dark mode
 17. ✅ **dodawanie własnych przepisów**
 18. ✅ **ranking użytkowników z odznakami**
-19. Transport danych do excela
+19. ✅ **Transport danych do excela**
 20. ✅ **Ranking przepisów**
