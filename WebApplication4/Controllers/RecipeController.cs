@@ -14,12 +14,14 @@ namespace WebApplication4.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly RecipeScraper _scraper;
+        private readonly UserService _userService;
 
         // Konstruktor z wstrzykniętym ApplicationDbContext i RecipeScraper
-        public RecipeController(ApplicationDbContext context, RecipeScraper scraper)
+        public RecipeController(ApplicationDbContext context, RecipeScraper scraper, UserService userService)
         {
             _context = context;
             _scraper = scraper;
+            _userService = userService;
         }
 
         // GET: Recipe
@@ -61,9 +63,22 @@ namespace WebApplication4.Controllers
             {
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
+
+                // Dodawanie punktów użytkownikowi za dodanie przepisu
+                var email = User.Identity.Name;
+                var user = await _userService.GetUserByEmailAsync(email);
+                if (user != null)
+                {
+                    
+                    user.Points += 20; // Przyznawanie punktów za dodanie przepisu
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(recipe);
+
         }
 
         // GET: Recipe/Edit/5
@@ -157,15 +172,28 @@ namespace WebApplication4.Controllers
         // POST: Recipe/AddRecipe
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRecipe([Bind("Name,Ingredients,Description")] Recipe recipe)
+        public async Task<IActionResult> AddRecipe([Bind("Id,Name,Description,Calories, Price,Points")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("LoggedApp", "User");
+
+                // Dodawanie punktów użytkownikowi za dodanie przepisu
+                var email = User.Identity.Name;
+                var user = await _userService.GetUserByEmailAsync(email);
+                if (user != null)
+                {
+                    
+                    user.Points += 20; // Przyznawanie punktów za dodanie przepisu
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index));
             }
             return View(recipe);
+
         }
 
         private bool RecipeExists(int id)

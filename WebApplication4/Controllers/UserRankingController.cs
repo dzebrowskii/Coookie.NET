@@ -5,16 +5,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication4.Models;
+using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
 {
     public class UserRankingController : Controller
     {
         private readonly ApplicationDbContext _context;
+        
+        private readonly UserService _userService;
 
-        public UserRankingController(ApplicationDbContext context)
+        public UserRankingController(ApplicationDbContext context,UserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         // GET: UserRanking
@@ -145,10 +149,12 @@ namespace WebApplication4.Controllers
         {
             return _context.UserRanking.Any(e => e.UserId == id);
         }
-        public IActionResult UserRanking()
-             {
-                 return View();
-             }
+        public async Task<IActionResult> UserRanking()
+        {
+            var users = await _userService.GetAllUsersAsync();
+            var sortedUsers = users.OrderByDescending(u => u.Points).ToList();
+            return View(sortedUsers);
+        }
     }
     
     

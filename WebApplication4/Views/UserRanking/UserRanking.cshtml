@@ -1,7 +1,35 @@
-﻿@model WebApplication4.Models.UserRanking
+﻿@model IEnumerable<WebApplication4.Models.User>
 
 @{
     ViewData["Title"] = "User Ranking";
-    
+    string[] badges = { "~/gold.png", "~/silver.png", "~/bronze.png" }; // Ścieżki do obrazków odznak
 }
-<div> User ranking</div>
+
+<h2>User Ranking</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Place in the ranking</th>
+        <th>Username</th>
+        <th>Points</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (int i = 1; i < Model.Count(); i++)
+    {
+        var user = Model.ElementAt(i);
+        <tr>
+            <td>@i</td>
+            <td>
+                @if (i < 4)
+                {
+                    <img src="@Url.Content(badges[i-1])" alt="Badge" style="width:30px;height:30px; margin-right:10px;"/>
+                }
+                @user.Username
+            </td>
+            <td>@user.Points</td>
+        </tr>
+    }
+    </tbody>
+</table>
