@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebApplication4.Services;
+using OfficeOpenXml;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +43,50 @@ namespace WebApplication4.Controllers
             }
 
             var ingredientUsage = await _analysisService.GetIngredientUsageAsync(userId.Id);
+            TempData["AnalysisData"] = JsonConvert.SerializeObject(ingredientUsage);
 
             return Json(ingredientUsage);
         }
+        
+        
+        [HttpGet]
+        public IActionResult DownloadFoodAnalysis()
+        {
+            var jsonData = TempData["AnalysisData"] as string;
+
+            if (jsonData == null)
+            {
+                return NotFound("Analysis data not found.");
+            }
+
+            var data = JsonConvert.DeserializeObject<Dictionary<string, int>>(jsonData);
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Analysis");
+
+                worksheet.Cells[1, 1].Value = "Ingredient";
+                worksheet.Cells[1, 2].Value = "Count";
+
+                int row = 2;
+                foreach (var item in data)
+                {
+                    worksheet.Cells[row, 1].Value = item.Key;
+                    worksheet.Cells[row, 2].Value = item.Value;
+                    row++;
+                }
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+                var content = stream.ToArray();
+
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Analysis.xlsx");
+            }
+        }
+        
+        
+        
         
         [HttpGet]
         public IActionResult FinancialAnalysis()
@@ -87,6 +130,8 @@ namespace WebApplication4.Controllers
                 {
                     Console.WriteLine($"{item.date}: {item.amount}");
                 }
+                
+                TempData["FinancialAnalysisData"] = JsonConvert.SerializeObject(data.ToList());
 
                 return Json(analysisData);
             }
@@ -97,6 +142,47 @@ namespace WebApplication4.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
+        
+        [HttpGet]
+        public IActionResult DownloadFinancialAnalysis()
+        {
+            var jsonData = TempData["FinancialAnalysisData"] as string;
+
+            if (jsonData == null)
+            {
+                return NotFound("Analysis data not found.");
+            }
+
+            // Deserializacja danych z dodatkowym sprawdzeniem
+            var dataList = JsonConvert.DeserializeObject<List<KeyValuePair<string, decimal>>>(jsonData);
+            var data = dataList
+                .Where(kvp => !string.IsNullOrEmpty(kvp.Key) && kvp.Value != 0)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Financial Analysis");
+
+                worksheet.Cells[1, 1].Value = "Date";
+                worksheet.Cells[1, 2].Value = "Amount";
+
+                int row = 2;
+                foreach (var item in data)
+                {
+                    worksheet.Cells[row, 1].Value = item.Key;
+                    worksheet.Cells[row, 2].Value = item.Value;
+                    row++;
+                }
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+                var content = stream.ToArray();
+
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "FinancialAnalysis.xlsx");
+            }
+        }
+
         
         [HttpPost]
         public async Task<IActionResult> GenerateCaloricAnalysis()
@@ -120,6 +206,8 @@ namespace WebApplication4.Controllers
                         amount = d.Value
                     })
                     .ToList();
+                
+                TempData["CaloricAnalysisData"] = JsonConvert.SerializeObject(data.ToList());
 
                 return Json(analysisData);
 
@@ -130,7 +218,52 @@ namespace WebApplication4.Controllers
                 Console.WriteLine(ex);
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
+            
+            
         }
+        
+        [HttpGet]
+        public IActionResult DownloadCaloricAnalysis()
+        {
+            var jsonData = TempData["CaloricAnalysisData"] as string;
+
+            if (jsonData == null)
+            {
+                return NotFound("Analysis data not found.");
+            }
+
+            // Deserializacja danych z dodatkowym sprawdzeniem
+            var dataList = JsonConvert.DeserializeObject<List<KeyValuePair<string, decimal>>>(jsonData);
+            var data = dataList
+                .Where(kvp => !string.IsNullOrEmpty(kvp.Key) && kvp.Value != 0)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Caloric Analysis");
+
+                worksheet.Cells[1, 1].Value = "Date";
+                worksheet.Cells[1, 2].Value = "Calories";
+
+                int row = 2;
+                foreach (var item in data)
+                {
+                    worksheet.Cells[row, 1].Value = item.Key;
+                    worksheet.Cells[row, 2].Value = item.Value;
+                    row++;
+                }
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                stream.Position = 0;
+                var content = stream.ToArray();
+
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CaloricAnalysis.xlsx");
+            }
+        }
+
+        
+        
 
 
 
