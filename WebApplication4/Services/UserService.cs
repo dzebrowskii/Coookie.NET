@@ -37,6 +37,11 @@ namespace WebApplication4.Services
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _context.User.ToListAsync();
+        }
+
 
         public async Task ChangeEmailAsync(string email, string newEmail)
         {

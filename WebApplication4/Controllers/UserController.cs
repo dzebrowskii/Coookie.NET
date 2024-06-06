@@ -63,11 +63,14 @@ namespace WebApplication4.Controllers
         // POST: User/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,Username,UserSurname,Password")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Email,Username,UserSurname,Password,ReferredBy")] User user)
         {
             user.ActivationToken = Guid.NewGuid().ToString();
             user.IsActive = false;
-
+            user.Points = 0;
+            
+            // Generowanie unikalnego kodu polecającego
+            user.ReferralCode = GenerateReferralCode(user.Email);
             var existingUser = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (existingUser != null)
             {
@@ -87,6 +90,17 @@ namespace WebApplication4.Controllers
 
                 return View(user);
             }
+            // Sprawdzanie kodu polecającego i przyznawanie punktów
+            if (!string.IsNullOrEmpty(user.ReferredBy))
+            {
+                var referringUser = await _context.User.FirstOrDefaultAsync(u => u.ReferralCode == user.ReferredBy);
+                if (referringUser != null)
+                {
+                    referringUser.Points += 10; // Przyznawanie punktów polecającemu
+                    user.Points += 5; // Przyznawanie punktów nowemu użytkownikowi
+                    _context.User.Update(referringUser); // Zapisanie zmian w bazie danych
+                }
+            }
 
             _context.Add(user);
             await _context.SaveChangesAsync();
@@ -96,6 +110,14 @@ namespace WebApplication4.Controllers
             TempData["SuccessMessage"] =
                 $"Account was created for {user.Email}. Please check your email to activate your account.";
             return RedirectToAction("Login");
+        }
+        private string GenerateReferralCode(string email)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(email));
+                return BitConverter.ToString(hash).Replace("-", "").Substring(0, 10);
+            }
         }
 
         private async Task SendActivationEmail(User user)
@@ -421,6 +443,8 @@ namespace WebApplication4.Controllers
 
             return View(user);
         }
+        
+        
 
         // GET: User/ChangePasswordLoggedUser
         [HttpGet]
@@ -524,6 +548,8 @@ namespace WebApplication4.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        
+        //Do rankingu uzytkownikow
         
         public async Task<IActionResult> SavedRecipes()
         {

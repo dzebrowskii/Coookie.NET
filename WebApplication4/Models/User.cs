@@ -29,6 +29,10 @@ public class User
     public string? ActivationToken { get; set; }
     public bool IsActive { get; set; } = false; // Domyślnie konto nieaktywne
     
+    public string? ReferralCode { get; set; } // Nowe pole może być null
+    public string? ReferredBy { get; set; } // Nowe pole, może być null
+    public int? Points { get; set; } // Nowe pole może być null
+    
 
     public virtual ICollection<Recipe> FavoriteRecipes { get; set; } = new List<Recipe>();
     public virtual ICollection<User> Friends { get; set; } = new List<User>();
