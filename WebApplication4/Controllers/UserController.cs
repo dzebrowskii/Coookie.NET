@@ -111,6 +111,9 @@ namespace WebApplication4.Controllers
                 $"Account was created for {user.Email}. Please check your email to activate your account.";
             return RedirectToAction("Login");
         }
+        
+        
+        
         private string GenerateReferralCode(string email)
         {
             using (var sha256 = System.Security.Cryptography.SHA256.Create())
@@ -119,6 +122,8 @@ namespace WebApplication4.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").Substring(0, 10);
             }
         }
+        
+        
 
         private async Task SendActivationEmail(User user)
         {

@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Recommend the App";
+    var referralCode = ViewData["ReferralCode"]?.ToString();
+}
+
+<div class="container text-center" style="margin-top: 50px;">
+    <h2>@ViewData["Title"]</h2>
+    <p>Your referral code is:</p>
+    <div class="referral-code" style="font-size: 24px; font-weight: bold; margin: 20px 0;">
+        @referralCode
+    </div>
+    <div>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Go Back to Home</a>
+    </div>
+</div>
