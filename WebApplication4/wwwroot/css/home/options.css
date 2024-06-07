@@ -32,14 +32,9 @@
 }
 
 .navbar {
-    background-color: #faf6f1 !important;
-    border: none !important;
-    box-shadow: none !important;
+    display: none;
 }
 
-.navbar a {
-    color: black !important;
-}
 
 
 

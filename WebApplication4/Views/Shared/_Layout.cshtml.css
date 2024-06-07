@@ -1,10 +1,35 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+.navbar.custom-bg {
+  background-color: #faf6f1;
+}
+
+.navbar {
+  background-color: #FFA500;
+}
+
+.navbar-brand {
+  color: black; /* Adjust the text color if needed */
+  background-color: black;
+}
+
+.navbar-brand:hover {
+  color: black; /* Adjust the text color on hover if needed */
+}
+
+.navbar-toggler
+{
+  color: black;
+  
+}
+.a{
+  color: black;
+}
+
+/* Stylizacje dodatkowe */
+.header {
+  background-color: #faf6f1; /* Ensure the header background color is applied */
 }
 
 a {
@@ -19,8 +44,8 @@ a {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #faf6f1;
+  border-color: #faf6f1;
 }
 
 .border-top {
