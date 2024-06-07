@@ -155,11 +155,7 @@ namespace WebApplication4.Controllers
             return View();
         }
 
-        // GET: User/GuestApp
-        public IActionResult GuestApp()
-        {
-            return View();
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> FindRecipes(string ingredients, string returnView)
@@ -171,20 +167,10 @@ namespace WebApplication4.Controllers
                 TempData["NoResultsMessage"] = "Unfortunately, we have not matched any of the recipes to the given ingredients.";
             }
 
-            if (User.Identity.IsAuthenticated)
-            {
-                if (string.Equals(returnView, "LoggedApp", StringComparison.OrdinalIgnoreCase))
-                {
-                    return View("LoggedApp", matchedRecipes);
-                }
-            }
-            else
-            {
-                return View("GuestApp", matchedRecipes);
-            }
-
-            // Domyślne przekierowanie, gdy nie zalogowano użytkownika
-            return View("GuestApp", matchedRecipes);
+            return View("LoggedApp", matchedRecipes);
+               
+            
+            
         }
         [HttpPost]
         public async Task<IActionResult> SaveRecipe(int recipeId)
