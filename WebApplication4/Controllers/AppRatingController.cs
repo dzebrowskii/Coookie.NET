@@ -19,8 +19,17 @@ namespace WebApplication4.Controllers
 
         // GET: AppRating/Rate
         [HttpGet]
-        public IActionResult Rate()
+        public async Task<IActionResult> Rate()
         {
+            var email = User.Identity.Name;
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (await _userService.HasUserRatedAppAsync(user.Id))
+            {
+                ViewBag.Message = "You have already rated the app.";
+                return View("AlreadyRated");
+            }
+
             return View();
         }
 
@@ -37,19 +46,18 @@ namespace WebApplication4.Controllers
                 return NotFound("User not found.");
             }
 
-            var rating = new AppRating
+            if (await _userService.HasUserRatedAppAsync(user.Id))
             {
-                User = user,
-                Value = value
-            };
+                ViewBag.Message = "You have already rated the app.";
+                return View("AlreadyRated");
+            }
 
-            _context.AppRating.Add(rating);
-            await _context.SaveChangesAsync();
+            await _userService.AddUserRatingAsync(user.Id, value);
 
             TempData["SuccessMessage"] = "Thank you for rating the app!";
             return RedirectToAction("Menu", "User");
         }
-        
+
         // GET: AppRating
         public async Task<IActionResult> Index()
         {

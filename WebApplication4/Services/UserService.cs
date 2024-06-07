@@ -55,9 +55,23 @@ namespace WebApplication4.Services
 
         public async Task DeleteAccountAsync(string email)
         {
-            var user = await GetUserByEmailAsync(email);
+            var user = await _context.User
+                .Include(u => u.SentFriendRequests)
+                .Include(u => u.ReceivedFriendRequests)
+                .FirstOrDefaultAsync(u => u.Email == email);
+
             if (user != null)
             {
+                // Usuń powiązane FriendRequests
+                _context.FriendRequest.RemoveRange(user.SentFriendRequests);
+                _context.FriendRequest.RemoveRange(user.ReceivedFriendRequests);
+
+                // Usuń powiązania znajomych
+                foreach (var friend in user.Friends.ToList())
+                {
+                    friend.Friends.Remove(user);
+                }
+
                 _context.User.Remove(user);
                 await _context.SaveChangesAsync();
             }
@@ -68,5 +82,32 @@ namespace WebApplication4.Services
             _context.Add(user);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task AddUserRatingAsync(int userId, int value)
+        {
+            var userRating = new AppRating
+            {
+                UserId = userId,
+                Value = value,
+                RatedOn = DateTime.UtcNow
+            };
+
+            _context.AppRating.Add(userRating);
+
+            var user = await _context.User.FindAsync(userId);
+            if (user != null)
+            {
+                user.Points += 5; // Dodaj 5 punktów użytkownikowi za ocenę
+                _context.User.Update(user);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+        
+        public async Task<bool> HasUserRatedAppAsync(int userId)
+        {
+            return await _context.AppRating.AnyAsync(r => r.UserId == userId);
+        }
+        
     }
 }

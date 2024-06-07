@@ -40,15 +40,16 @@ public class ApplicationDbContext : DbContext
         
         modelBuilder.Entity<FriendRequest>()
             .HasOne(fr => fr.FromUser)
-            .WithMany(u => u.FriendRequests)
+            .WithMany(u => u.SentFriendRequests)
             .HasForeignKey(fr => fr.FromUserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<FriendRequest>()
             .HasOne(fr => fr.ToUser)
-            .WithMany()
+            .WithMany(u => u.ReceivedFriendRequests)
             .HasForeignKey(fr => fr.ToUserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
         
     }
 }

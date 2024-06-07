@@ -60,7 +60,7 @@ else
             $('.remove-friend').click(function() {
                 var userId = $(this).data('userid');
                 if (confirm('Are you sure you want to remove this friend?')) {
-                    $.post('@Url.Action("RemoveFriend", "Friends")', { id: userId }, function(result) {
+                    $.post('@Url.Action("RemoveFriend", "Friends")', { friendId: userId }, function(result) {
                         if (result.success) {
                             location.reload(); // Reload the page to reflect changes
                         } else {

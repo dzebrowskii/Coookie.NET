@@ -84,7 +84,25 @@ namespace WebApplication4.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
         
-        
+        public async Task RemoveFriendAsync(int userId, int friendId)
+        {
+            var user = await _context.User
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            var friend = await _context.User
+                .Include(u => u.Friends)
+                .FirstOrDefaultAsync(u => u.Id == friendId);
+
+            if (user != null && friend != null)
+            {
+                user.Friends.Remove(friend);
+                friend.Friends.Remove(user);
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
         
         
 

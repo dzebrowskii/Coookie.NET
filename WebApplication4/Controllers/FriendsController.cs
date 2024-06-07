@@ -105,20 +105,15 @@ namespace WebApplication4.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> RemoveFriend(int id)
+        public async Task<IActionResult> RemoveFriend(int friendId)
         {
             var email = User.Identity.Name;
             var user = await _userService.GetUserByEmailAsync(email);
 
             if (user != null)
             {
-                var friend = await _context.User.FindAsync(id);
-                if (friend != null)
-                {
-                    user.Friends.Remove(friend);
-                    await _context.SaveChangesAsync();
-                    return Json(new { success = true });
-                }
+                await _friendService.RemoveFriendAsync(user.Id, friendId);
+                return Json(new { success = true });
             }
 
             return Json(new { success = false });
