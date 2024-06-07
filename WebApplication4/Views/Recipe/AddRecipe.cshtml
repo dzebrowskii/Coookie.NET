@@ -1,54 +1,31 @@
-﻿@model Recipe
+﻿@model WebApplication4.Models.Recipe
 
 @{
     ViewData["Title"] = "Add Recipe";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Add Recipe</h1>
+<h2>Add Recipe</h2>
 
-<h4>Recipe</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Calories" class="control-label"></label>
-                <input asp-for="Calories" class="form-control" />
-                <span asp-validation-for="Calories" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Points" class="control-label"></label>
-                <input asp-for="Points" class="form-control" />
-                <span asp-validation-for="Points" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="AddRecipe" method="post">
+    <div class="form-group">
+        <label for="Name">Recipe Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" required />
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <div class="form-group">
+        <label for="Ingredients">Ingredients (comma-separated)</label>
+        <input type="text" class="form-control" id="Ingredients" name="Ingredients" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Description" rows="5" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="Calories">Calories</label>
+        <input type="number" class="form-control" id="Calories" name="Calories" />
+    </div>
+    <div class="form-group">
+        <label for="Price">Price</label>
+        <input type="number" step="0.01" class="form-control" id="Price" name="Price" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

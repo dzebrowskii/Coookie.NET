@@ -172,10 +172,19 @@ namespace WebApplication4.Controllers
         // POST: Recipe/AddRecipe
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRecipe([Bind("Id,Name,Description,Calories, Price,Points")] Recipe recipe)
+        public async Task<IActionResult> AddRecipe([Bind("Name,Description,Ingredients,Calories,Price")] Recipe recipe, string Ingredients)
         {
             if (ModelState.IsValid)
             {
+                // Przetwarzanie składników
+                var ingredientNames = Ingredients.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var ingredientName in ingredientNames)
+                {
+                    var ingredient = new Ingredient { Name = ingredientName.Trim() };
+                    var recipeIngredient = new RecipeIngredient { Ingredient = ingredient, Recipe = recipe };
+                    recipe.RecipeIngredients.Add(recipeIngredient);
+                }
+
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
 
@@ -184,7 +193,6 @@ namespace WebApplication4.Controllers
                 var user = await _userService.GetUserByEmailAsync(email);
                 if (user != null)
                 {
-                    
                     user.Points += 20; // Przyznawanie punktów za dodanie przepisu
                     _context.Update(user);
                     await _context.SaveChangesAsync();
@@ -193,7 +201,6 @@ namespace WebApplication4.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(recipe);
-
         }
 
         private bool RecipeExists(int id)
