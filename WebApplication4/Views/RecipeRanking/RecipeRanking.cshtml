@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Ranking Przepisów</h2>
+<h2>Recipe Ranking</h2>
 
 <table class="table">
     <thead>
@@ -23,7 +23,8 @@
     {
         <tr>
             <td>@place</td>
-            <td><a href="#" class="recipe-link" data-id="@recipe.Id">@recipe.Name</a></td>
+            <td><a href="#" class="recipe-link" data-id="@recipe.Id" style="color: black; text-decoration: none;" onmouseover="this.style.color='#333333'" onmouseout="this.style.color='black'">@recipe.Name</a></td>
+
             <td>@recipe.Points</td>
         </tr>
         place++;
@@ -37,9 +38,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="recipeModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                
             </div>
             <div class="modal-body">
                 <p><strong>Description:</strong> <span id="recipeDescription"></span></p>

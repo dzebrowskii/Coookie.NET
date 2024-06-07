@@ -24,6 +24,10 @@ namespace WebApplication4.Services
 
         public async Task<List<Recipe>> RecipeSearcher(string ingredients)
         {
+            if (string.IsNullOrEmpty((ingredients)))
+            {
+                return null;
+            }
             var matchedRecipes = new List<Recipe>();
             var ingList = ingredients.ToLower().Split().ToList(); // List of ingredients from input, lowercase
 
@@ -42,6 +46,8 @@ namespace WebApplication4.Services
                     matchedRecipes.Add(recipe);
                 }
             }
+            
+            
 
             return matchedRecipes;
         }

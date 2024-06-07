@@ -112,33 +112,20 @@ namespace WebApplication4.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-        // GET: RecipeIngredient/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        
+        public IActionResult Delete()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var recipeIngredient = await _context.RecipeIngredient
-                .Include(r => r.Ingredient)
-                .Include(r => r.Recipe)
-                .FirstOrDefaultAsync(m => m.RecipeId == id);
-            if (recipeIngredient == null)
-            {
-                return NotFound();
-            }
-
-            return View(recipeIngredient);
+            return View();
         }
 
-        // POST: RecipeIngredient/Delete/5
+        
+
+        // POST: RecipeIngredient/Delete2/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int RecipeId, int IngredientId)
         {
-            var recipeIngredient = await _context.RecipeIngredient.FindAsync(id);
+            var recipeIngredient = await _context.RecipeIngredient.FindAsync(RecipeId,IngredientId);
             if (recipeIngredient != null)
             {
                 _context.RecipeIngredient.Remove(recipeIngredient);

@@ -24,7 +24,7 @@ namespace WebApplication4.Controllers
         {
             var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
 
-            if (!matchedRecipes.Any())
+            if (matchedRecipes == null || !matchedRecipes.Any())
             {
                 TempData["NoResultsMessage"] = "Unfortunately, we have not matched any of the recipes to the given ingredients.";
             }

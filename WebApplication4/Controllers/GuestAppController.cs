@@ -21,11 +21,11 @@ public class GuestAppController : Controller
     {
         return View();
     }
-    public async Task<IActionResult> FindRecipes(string ingredients, string returnView)
+    public async Task<IActionResult> FindRecipes(string ingredients)
     {
         var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
             
-        if (!matchedRecipes.Any())
+        if (matchedRecipes == null || !matchedRecipes.Any())
         {
             TempData["NoResultsMessage"] = "Unfortunately, we have not matched any of the recipes to the given ingredients.";
         }

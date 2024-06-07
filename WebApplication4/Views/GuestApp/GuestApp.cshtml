@@ -1,7 +1,7 @@
 ﻿@model List<WebApplication4.Models.Recipe>
 
 @{
-    ViewData["Title"] = "Enter your ingredients";
+    ViewData["Title"] = "Search your Recipe";
     Layout = "~/Views/Shared/_Layout.cshtml";
     
 }
@@ -41,8 +41,9 @@
             @foreach (var recipe in Model)
             {
                 <li>
-                    @recipe.Description
-                </li>
+                    @recipe.Name </li>
+                        <div>@recipe.Description
+                        </div>
             }
         </ul>
     }
