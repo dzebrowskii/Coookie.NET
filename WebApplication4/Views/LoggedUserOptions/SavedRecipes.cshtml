@@ -11,13 +11,16 @@
     <ul>
         @foreach (var recipe in Model)
         {
-            <li>
-                @recipe.Description
+            
+                <li>
+                    @recipe.Name </li>
+                <div>@recipe.Description
+                
                 <form asp-action="RemoveFavoriteRecipe" method="post" style="display:inline;">
                     <input type="hidden" name="recipeId" value="@recipe.Id" />
                     <button type="submit" class="btn btn-danger btn-sm">x</button>
                 </form>
-            </li>
+            </div>
         }
     </ul>
 }

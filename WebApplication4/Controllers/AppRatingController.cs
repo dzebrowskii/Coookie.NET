@@ -55,6 +55,20 @@ namespace WebApplication4.Controllers
         {
             return View(await _context.AppRating.Include(ar => ar.User).ToListAsync());
         }
-        
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+        public IActionResult Delete()
+        {
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }

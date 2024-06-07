@@ -183,6 +183,7 @@ namespace WebApplication4.Controllers
                     var ingredient = new Ingredient { Name = ingredientName.Trim() };
                     var recipeIngredient = new RecipeIngredient { Ingredient = ingredient, Recipe = recipe };
                     recipe.RecipeIngredients.Add(recipeIngredient);
+                    recipe.Points = 0;
                 }
 
                 _context.Add(recipe);
@@ -198,7 +199,8 @@ namespace WebApplication4.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Recipe successfully added.";
+                return RedirectToAction("Menu","User");
             }
             return View(recipe);
         }

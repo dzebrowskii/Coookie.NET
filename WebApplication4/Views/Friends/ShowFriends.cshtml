@@ -15,6 +15,7 @@
         {
             <li>
                 <a href="#" class="friend-link" data-userid="@friend.Id">@friend.Username</a>
+                <button class="btn btn-danger btn-sm remove-friend" data-userid="@friend.Id">x</button>
             </li>
         }
     </ul>
@@ -54,5 +55,31 @@ else
                 $('#friendDetailsModal').modal('show');
             });
         }
+
+        $(document).ready(function() {
+            $('.remove-friend').click(function() {
+                var userId = $(this).data('userid');
+                if (confirm('Are you sure you want to remove this friend?')) {
+                    $.post('@Url.Action("RemoveFriend", "Friends")', { id: userId }, function(result) {
+                        if (result.success) {
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert('Error removing friend.');
+                        }
+                    });
+                }
+            });
+        });
     </script>
 }
+<style>
+    .friend-link {
+        color: black; /* Ustawia kolor tekstu na czarny */
+        text-decoration: none; /* Usuwa podkreślenie */
+    }
+    
+    .friend-link:hover {
+        color: darkgray; /* Opcjonalnie zmienia kolor tekstu na ciemniejszy odcień szarości po najechaniu */
+        text-decoration: none; /* Upewnia się, że nie pojawi się podkreślenie po najechaniu */
+    }
+</style>

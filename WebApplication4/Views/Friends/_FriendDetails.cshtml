@@ -1,14 +1,15 @@
 ﻿@model WebApplication4.Models.User
 
 <h4>Friend Details</h4>
-<p><strong>Username:</strong> @Model.Username</p>
-<p><strong>UserSurname:</strong> @Model.UserSurname</p>
+<p><strong>Name:</strong> @Model.Username</p>
+<p><strong>Surname:</strong> @Model.UserSurname</p>
 <p><strong>Email:</strong> @Model.Email</p>
 
 <h5>Saved Recipes</h5>
 <ul>
     @foreach (var recipe in Model.FavoriteRecipes)
     {
+        <div>@recipe.Name</div>
         <li>@recipe.Description</li>
     }
 </ul>

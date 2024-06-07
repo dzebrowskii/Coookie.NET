@@ -37,14 +37,16 @@
     <ul id="recipes-list">
         @foreach (var recipe in Model)
         {
-            <li id="recipe-@recipe.Id">
-                @recipe.Name
-                @recipe.Description
+            
+                <li id="recipe-@recipe.Id">
+                                    @recipe.Name </li>
+                                        <div>@recipe.Description
+                                        </div>
                 <form class="save-recipe-form" data-recipe-id="@recipe.Id" style="display:inline;">
                     <input type="hidden" name="recipeId" value="@recipe.Id"/>
                     <button type="submit" class="btn btn-secondary">Save Recipe</button>
                 </form>
-            </li>
+            
         }
     </ul>
 }

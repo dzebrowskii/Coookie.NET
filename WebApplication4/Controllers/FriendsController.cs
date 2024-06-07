@@ -9,11 +9,13 @@ namespace WebApplication4.Controllers
     {
         private readonly UserService _userService;
         private readonly FriendService _friendService;
+        private readonly ApplicationDbContext _context;
 
-        public FriendsController(UserService userService, FriendService friendService)
+        public FriendsController(UserService userService, FriendService friendService, ApplicationDbContext context)
         {
             _userService = userService;
             _friendService = friendService;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -100,6 +102,26 @@ namespace WebApplication4.Controllers
                 return NotFound();
             }
             return PartialView("_FriendDetails", user);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> RemoveFriend(int id)
+        {
+            var email = User.Identity.Name;
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user != null)
+            {
+                var friend = await _context.User.FindAsync(id);
+                if (friend != null)
+                {
+                    user.Friends.Remove(friend);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true });
+                }
+            }
+
+            return Json(new { success = false });
         }
         
         
