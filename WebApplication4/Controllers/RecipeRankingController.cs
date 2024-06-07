@@ -161,6 +161,8 @@ namespace WebApplication4.Controllers
                 .ToListAsync();
             return View(recipes);
         }
+        
+        //wyswietlanie szczegolow przepisow
         public async Task<IActionResult> GetRecipeDetails(int id)
         {
             var recipe = await _context.Recipe

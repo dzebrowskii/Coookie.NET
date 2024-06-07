@@ -5,7 +5,7 @@ namespace WebApplication4.Models;
 
 public class RecipeRanking
 {
-    // Usuń atrybuty [Key] z właściwości
+    
     public int RecipeId { get; set; }
     public virtual Recipe Recipe { get; set; }
 

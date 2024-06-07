@@ -54,16 +54,16 @@ namespace WebApplication4.Controllers
             return View(user);
         }
 
-        // GET: User/Create
-        public IActionResult Create()
+        // GET: User/Registration
+        public IActionResult Registration()
         {
             return View();
         }
 
-        // POST: User/Create
+        // POST: User/Registration
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,Username,UserSurname,Password,ReferredBy")] User user)
+        public async Task<IActionResult> Registration([Bind("Id,Email,Username,UserSurname,Password,ReferredBy")] User user)
         {
             user.ActivationToken = Guid.NewGuid().ToString();
             user.IsActive = false;
@@ -79,15 +79,7 @@ namespace WebApplication4.Controllers
 
             if (!ModelState.IsValid)
             {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    foreach (var error in modelStateVal.Errors)
-                    {
-                        Console.WriteLine($"Error in {modelStateKey}: {error.ErrorMessage}");
-                    }
-                }
-
+                
                 return View(user);
             }
             // Sprawdzanie kodu polecającego i przyznawanie punktów
@@ -154,24 +146,8 @@ namespace WebApplication4.Controllers
         {
             return View();
         }
-
         
-
-        [HttpPost]
-        public async Task<IActionResult> FindRecipes(string ingredients, string returnView)
-        {
-            var matchedRecipes = await _recipeService.RecipeSearcher(ingredients);
-            
-            if (!matchedRecipes.Any())
-            {
-                TempData["NoResultsMessage"] = "Unfortunately, we have not matched any of the recipes to the given ingredients.";
-            }
-
-            return View("LoggedApp", matchedRecipes);
-               
-            
-            
-        }
+       
         [HttpPost]
         public async Task<IActionResult> SaveRecipe(int recipeId)
         {
@@ -186,12 +162,8 @@ namespace WebApplication4.Controllers
 
             return Json(new { success = false });
         }
-
-
-        public IActionResult LoggedApp()
-        {
-            return View();
-        }
+        
+        
 
         // POST: Account/Login
         [HttpPost]
@@ -245,7 +217,7 @@ namespace WebApplication4.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                return RedirectToAction("LoggedApp");
+                return RedirectToAction("LoggedApp", "LoggedApp");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid email or password.");
@@ -420,160 +392,9 @@ namespace WebApplication4.Controllers
             return View();
         }
 
-        // GET: User/MyAccount
-        public async Task<IActionResult> MyAccount()
-        {
-            var email = User.Identity.Name; // Pobierz email aktualnie zalogowanego użytkownika
-            Console.WriteLine($"Logged-in user's email: {email}");
-            var user = await _userService.GetUserByEmailAsync(email);
-
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            return View(user);
-        }
         
         
-
-        // GET: User/ChangePasswordLoggedUser
-        [HttpGet]
         
-        public IActionResult ChangePasswordLoggedUser()
-        {
-            return View();
-        }
-
-        // POST: User/ChangePasswordLoggedUser
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePasswordLoggedUser(ChangePasswordForLoggedInUserViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var email = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(email);
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            if (user.Password != model.CurrentPassword)
-            {
-                ModelState.AddModelError(string.Empty, "Current password is incorrect.");
-                return View(model);
-            }
-
-            user.Password = model.NewPassword;
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-
-            TempData["PasswordChange"] = "Password changed successfully.";
-            return RedirectToAction("MyAccount");
-        }
-
-        // GET: User/ChangeEmail
-        public IActionResult ChangeEmail()
-        {
-            return View();
-        }
-
-        // POST: User/ChangeEmail
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeEmail(string newEmail)
-        {
-            var email = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(email);
-
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            var existingUser = await _userService.GetUserByEmailAsync(newEmail);
-            if (existingUser != null)
-            {
-                ModelState.AddModelError("Email", "An account with this email already exists.");
-                return View();
-            }
-
-            user.ActivationToken = Guid.NewGuid().ToString();
-            user.Email = newEmail;
-            user.IsActive = false;
-
-            await _context.SaveChangesAsync();
-            await SendEmailChangeActivationEmail(user);
-
-            TempData["SuccessMessage"] = $"An email change confirmation link has been sent to {newEmail}. Please check your email to confirm the change.";
-            return RedirectToAction("Login");
-        }
-        
-        private async Task SendEmailChangeActivationEmail(User user)
-        {
-            var activationLink = Url.Action("ActivateAccount", "User", new { token = user.ActivationToken }, Request.Scheme);
-            string subject = "Email Change Activation";
-            string message = $"Please confirm your email change by clicking the following link: {activationLink}";
-            await _emailService.SendEmailAsync(user.Email, subject, message);
-        }
-
-
-
-        // GET: User/DeleteAccount
-        public IActionResult DeleteAccount()
-        {
-            return View();
-        }
-
-        // POST: User/DeleteAccountConfirmed
-        [HttpPost, ActionName("DeleteAccount")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAccountConfirmed()
-        {
-            var email = User.Identity.Name;
-            await _userService.DeleteAccountAsync(email);
-
-            return RedirectToAction("Index", "Home");
-        }
-        
-        //Do rankingu uzytkownikow
-        
-        public async Task<IActionResult> SavedRecipes()
-        {
-            var email = User.Identity.Name;
-            var user = await _userService.GetUserByEmailAsync(email);
-
-            if (user != null)
-            {
-                var savedRecipes = await _context.User
-                    .Where(u => u.Id == user.Id)
-                    .SelectMany(u => u.FavoriteRecipes)
-                    .ToListAsync();
-
-                return View(savedRecipes);
-            }
-
-            return View(new List<Recipe>());
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> RemoveFavoriteRecipe(int recipeId)
-        {
-            var email = User.Identity.Name;
-            var userId = await _userService.GetUserByEmailAsync(email);
-            await _recipeService.RemoveFavoriteRecipeAsync(userId.Id, recipeId);
-            return RedirectToAction("SavedRecipes");
-        }
-
-        
-        public IActionResult Analysis()
-        {
-            return View();
-        }
 
 
 

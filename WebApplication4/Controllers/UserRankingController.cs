@@ -144,11 +144,13 @@ namespace WebApplication4.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+            
         private bool UserRankingExists(int id)
         {
             return _context.UserRanking.Any(e => e.UserId == id);
         }
+        
+        //pobieranie listy uzytkownikow i sortowanie po punktach
         public async Task<IActionResult> UserRanking()
         {
             var users = await _userService.GetAllUsersAsync();
