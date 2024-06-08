@@ -7,7 +7,7 @@
 
 <p>Creating a new recipe based on: <strong>@existingRecipe.Name</strong></p>
 
-<form method="post" asp-action="SaveBasedOnExisting">
+<form method="post" asp-action="SaveBasedOnExisting" id="recipeForm">
     <input type="hidden" name="ExistingRecipeId" value="@existingRecipe.Id" />
 
     <div class="form-group">
@@ -16,10 +16,14 @@
     </div>
     <div class="form-group">
         <label>Existing Ingredients</label>
-        <ul>
+        <ul id="existingIngredients">
             @foreach (var recipeIngredient in existingRecipe.RecipeIngredients)
             {
-                <li>@recipeIngredient.Ingredient.Name</li>
+                <li>
+                    <span class="ingredient-name">@recipeIngredient.Ingredient.Name</span>
+                    <input type="hidden" name="ExistingIngredients" value="@recipeIngredient.Ingredient.Name" />
+                    <button type="button" class="btn btn-danger btn-sm remove-ingredient" onclick="removeIngredient(this)">x</button>
+                </li>
             }
         </ul>
     </div>
@@ -43,3 +47,38 @@
 </form>
 
 <a href="@Url.Action("Menu", "Recipe")" class="btn btn-secondary">Go Back</a>
+
+@section Scripts {
+    <script>
+        function removeIngredient(button) {
+            var li = button.parentElement;
+            li.remove();
+        }
+
+        document.getElementById('recipeForm').addEventListener('submit', function (event) {
+            var ingredients = document.querySelectorAll('#existingIngredients li');
+            ingredients.forEach(function (ingredient) {
+                if (!ingredient.querySelector('.ingredient-name')) {
+                    ingredient.remove();
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .remove-ingredient {
+        margin-left: 10px;
+        padding: 2px 5px;
+        font-size: 0.8em;
+    }
+    .menu-item {
+        color: black; /* Ustawia kolor tekstu na czarny */
+        text-decoration: none; /* Usuwa podkreślenie */
+    }
+    
+    .menu-item:hover {
+        color: white; /* Opcjonalnie zmienia kolor tekstu na biały po najechaniu */
+        text-decoration: none; /* Upewnia się, że nie pojawi się podkreślenie po najechaniu */
+    }
+</style>

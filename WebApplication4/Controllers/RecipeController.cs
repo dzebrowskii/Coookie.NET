@@ -251,60 +251,63 @@ namespace WebApplication4.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         [HttpPost]
-        public async Task<IActionResult> SaveBasedOnExisting(int existingRecipeId, string name, string newIngredients, string description, int calories, decimal price)
+        public async Task<IActionResult> SaveBasedOnExisting(int existingRecipeId, string name, string newIngredients, string description, int calories, decimal price, List<string> existingIngredients)
+{
+    var existingRecipe = await _context.Recipe
+        .Include(r => r.RecipeIngredients)
+        .ThenInclude(ri => ri.Ingredient)
+        .FirstOrDefaultAsync(r => r.Id == existingRecipeId);
+
+    if (existingRecipe == null)
+    {
+        return NotFound("Recipe not found.");
+    }
+
+    var newRecipe = new Recipe
+    {
+        Name = name,
+        Description = description,
+        Calories = calories,
+        Price = price,
+        RecipeIngredients = new List<RecipeIngredient>()
+    };
+
+    // Kopiowanie istniejących składników do nowego przepisu, jeśli są w liście existingIngredients
+    foreach (var existingRecipeIngredient in existingRecipe.RecipeIngredients)
+    {
+        if (existingIngredients.Contains(existingRecipeIngredient.Ingredient.Name))
         {
-            var existingRecipe = await _context.Recipe
-                .Include(r => r.RecipeIngredients)
-                .ThenInclude(ri => ri.Ingredient)
-                .FirstOrDefaultAsync(r => r.Id == existingRecipeId);
-
-            if (existingRecipe == null)
+            var newRecipeIngredient = new RecipeIngredient
             {
-                return NotFound("Recipe not found.");
-            }
-
-            var newRecipe = new Recipe
-            {
-                Name = name,
-                Description = description,
-                Calories = calories,
-                Price = price,
-                RecipeIngredients = new List<RecipeIngredient>()
+                Recipe = newRecipe,
+                Ingredient = existingRecipeIngredient.Ingredient
             };
-
-            // Kopiowanie istniejących składników do nowego przepisu
-            foreach (var existingRecipeIngredient in existingRecipe.RecipeIngredients)
-            {
-                var newRecipeIngredient = new RecipeIngredient
-                {
-                    Recipe = newRecipe,
-                    Ingredient = existingRecipeIngredient.Ingredient
-                };
-                newRecipe.RecipeIngredients.Add(newRecipeIngredient);
-            }
-
-            // Dodawanie nowych składników
-            if (!string.IsNullOrEmpty(newIngredients))
-            {
-                var ingredientsArray = newIngredients.Split(',');
-                foreach (var ingredientName in ingredientsArray)
-                {
-                    var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Name == ingredientName.Trim());
-                    if (ingredient == null)
-                    {
-                        ingredient = new Ingredient { Name = ingredientName.Trim() };
-                        _context.Ingredient.Add(ingredient);
-                    }
-                    newRecipe.RecipeIngredients.Add(new RecipeIngredient { Recipe = newRecipe, Ingredient = ingredient });
-                }
-            }
-
-            _context.Recipe.Add(newRecipe);
-            await _context.SaveChangesAsync();
-            TempData["newRecipe"] = "Recipe successfully added.";
-
-            return RedirectToAction("Menu", "Recipe");
+            newRecipe.RecipeIngredients.Add(newRecipeIngredient);
         }
+    }
+
+    // Dodawanie nowych składników
+    if (!string.IsNullOrEmpty(newIngredients))
+    {
+        var ingredientsArray = newIngredients.Split(',');
+        foreach (var ingredientName in ingredientsArray)
+        {
+            var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Name == ingredientName.Trim());
+            if (ingredient == null)
+            {
+                ingredient = new Ingredient { Name = ingredientName.Trim() };
+                _context.Ingredient.Add(ingredient);
+            }
+            newRecipe.RecipeIngredients.Add(new RecipeIngredient { Recipe = newRecipe, Ingredient = ingredient });
+        }
+    }
+
+    _context.Recipe.Add(newRecipe);
+    await _context.SaveChangesAsync();
+    TempData["newRecipe"] = "Recipe successfully added.";
+
+    return RedirectToAction("Menu", "Recipe");
+}
 
 
         
