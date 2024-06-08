@@ -24,8 +24,12 @@
         </ul>
     </div>
     <div class="form-group">
-        <label for="NewIngredients">New Ingredients ( comma-separated)</label>
+        <label for="NewIngredients">New Ingredients (comma-separated)</label>
         <input type="text" class="form-control" id="NewIngredients" name="NewIngredients" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Description" rows="5">@existingRecipe.Description</textarea>
     </div>
     <div class="form-group">
         <label for="Calories">Calories</label>
@@ -38,4 +42,4 @@
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-<a href="@Url.Action("Index", "Recipe")" class="btn btn-secondary">Go Back</a>
+<a href="@Url.Action("Menu", "Recipe")" class="btn btn-secondary">Go Back</a>

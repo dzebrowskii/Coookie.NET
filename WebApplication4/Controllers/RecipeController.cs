@@ -249,7 +249,9 @@ namespace WebApplication4.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveBasedOnExisting(int existingRecipeId, string name, string newIngredients, int calories, decimal price)
+        [HttpPost]
+        [HttpPost]
+        public async Task<IActionResult> SaveBasedOnExisting(int existingRecipeId, string name, string newIngredients, string description, int calories, decimal price)
         {
             var existingRecipe = await _context.Recipe
                 .Include(r => r.RecipeIngredients)
@@ -264,34 +266,45 @@ namespace WebApplication4.Controllers
             var newRecipe = new Recipe
             {
                 Name = name,
-                Description = existingRecipe.Description,
+                Description = description,
                 Calories = calories,
                 Price = price,
                 RecipeIngredients = new List<RecipeIngredient>()
             };
 
-            foreach (var ingredient in existingRecipe.RecipeIngredients.Select(ri => ri.Ingredient))
+            // Kopiowanie istniejących składników do nowego przepisu
+            foreach (var existingRecipeIngredient in existingRecipe.RecipeIngredients)
             {
-                newRecipe.RecipeIngredients.Add(new RecipeIngredient { Ingredient = ingredient });
+                var newRecipeIngredient = new RecipeIngredient
+                {
+                    Recipe = newRecipe,
+                    Ingredient = existingRecipeIngredient.Ingredient
+                };
+                newRecipe.RecipeIngredients.Add(newRecipeIngredient);
             }
 
+            // Dodawanie nowych składników
             if (!string.IsNullOrEmpty(newIngredients))
             {
-                var newIngredientNames = newIngredients.Split(',').Select(i => i.Trim()).ToList();
-                foreach (var ingredientName in newIngredientNames)
+                var ingredientsArray = newIngredients.Split(',');
+                foreach (var ingredientName in ingredientsArray)
                 {
-                    var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Name == ingredientName)
-                                     ?? new Ingredient { Name = ingredientName };
-                    newRecipe.RecipeIngredients.Add(new RecipeIngredient { Ingredient = ingredient });
+                    var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Name == ingredientName.Trim());
+                    if (ingredient == null)
+                    {
+                        ingredient = new Ingredient { Name = ingredientName.Trim() };
+                        _context.Ingredient.Add(ingredient);
+                    }
+                    newRecipe.RecipeIngredients.Add(new RecipeIngredient { Recipe = newRecipe, Ingredient = ingredient });
                 }
             }
 
             _context.Recipe.Add(newRecipe);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Recipe successfully added.";
             return RedirectToAction("Index", "Recipe");
         }
+
 
         
         
