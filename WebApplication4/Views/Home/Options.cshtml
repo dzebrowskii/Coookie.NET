@@ -1,9 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Options";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<link rel="stylesheet" type="text/css" href="~/css/home/options.css">
 
 <div class="menu-container">
     <a href="@Url.Action("GuestApp", "GuestApp")" class="menu-button">Login as Guest</a>
@@ -12,3 +9,26 @@
     <a href="@Url.Action("RecipeRanking", "RecipeRanking")" class="menu-button">Recipe ranking</a>
     <a href="@Url.Action("UserRanking", "UserRanking")" class="menu-button">User ranking</a>
 </div>
+
+<style>
+    .menu-button {
+        display: block;
+        width: 250px; /* Zwiększona szerokość przycisków */
+        padding: 20px 0; /* Większy padding dla większych przycisków */
+        margin: 20px auto; /* Odległość między przyciskami */
+        font-size: 1.4em; /* Większy rozmiar czcionki */
+        background-color: #d9a404; /* Złoty kolor przycisku */
+        color: white;
+        text-decoration: none;
+        border-radius: 20px; /* Bardziej zaokrąglone rogi */
+        text-align: center;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .menu-button:hover {
+        background-color: #e6c60d; /* Lekko ciemniejszy kolor przycisku przy najechaniu */
+        transform: scale(1.05); /* Lekkie powiększenie przycisku przy najechaniu */
+        text-decoration: none !important;
+        color: white;
+    }
+</style>

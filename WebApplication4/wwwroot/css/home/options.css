@@ -1,13 +1,4 @@
-﻿body {
-    background: #faf6f1; /* Tło, które jest tylko trochę ciemniejsze niż na stronie powitalnej */
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    height: 100vh; /* Pełna wysokość widoku */
-    display: flex;
-    flex-direction: column; /* Układ elementów w pionie */
-    justify-content: center; /* Wyśrodkowanie w pionie */
-    align-items: center; /* Wyśrodkowanie w poziomie */
-}
+﻿
 
 .menu-button {
     display: block;
@@ -31,9 +22,7 @@
     color: white;
 }
 
-.navbar {
-    display: none;
-}
+
 
 
 
