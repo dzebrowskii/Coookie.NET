@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Add Recipe Based on Existing";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>Select an existing recipe to base your new recipe on:</p>
+
+<form method="post" asp-action="AddBasedOnExistingStep2">
+    <div class="form-group">
+        <label for="ExistingRecipeId">Existing Recipe</label>
+        <select class="form-control" id="ExistingRecipeId" name="ExistingRecipeId">
+            @foreach (var recipe in ViewBag.Recipes)
+            {
+                <option value="@recipe.Id">@recipe.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Next</button>
+</form>
+
+<a href="@Url.Action("Index", "Recipe")" class="btn btn-secondary">Go Back</a>

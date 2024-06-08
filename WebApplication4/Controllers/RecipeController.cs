@@ -200,7 +200,7 @@ namespace WebApplication4.Controllers
                 }
 
                 TempData["SuccessMessage"] = "Recipe successfully added.";
-                return RedirectToAction("Menu","User");
+                return RedirectToAction("Menu","Recipe");
             }
             return View(recipe);
         }
@@ -216,5 +216,85 @@ namespace WebApplication4.Controllers
             await _scraper.ScrapeAsync();
             return Content("Scraping wykonany.");
         }
+        
+        public IActionResult Menu()
+        {
+            return View();
+        }
+        public async Task<IActionResult> AddBasedOnExisting()
+        {
+            var recipes = await _context.Recipe.ToListAsync();
+            ViewBag.Recipes = recipes;
+            return View();
+        }
+
+        
+        [HttpPost]
+        public async Task<IActionResult> AddBasedOnExistingStep2(int existingRecipeId)
+        {
+            var existingRecipe = await _context.Recipe
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .FirstOrDefaultAsync(r => r.Id == existingRecipeId);
+
+            if (existingRecipe == null)
+            {
+                return NotFound("Recipe not found.");
+            }
+
+            ViewBag.ExistingRecipe = existingRecipe;
+            return View();
+        }
+
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveBasedOnExisting(int existingRecipeId, string name, string newIngredients, int calories, decimal price)
+        {
+            var existingRecipe = await _context.Recipe
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .FirstOrDefaultAsync(r => r.Id == existingRecipeId);
+
+            if (existingRecipe == null)
+            {
+                return NotFound("Recipe not found.");
+            }
+
+            var newRecipe = new Recipe
+            {
+                Name = name,
+                Description = existingRecipe.Description,
+                Calories = calories,
+                Price = price,
+                RecipeIngredients = new List<RecipeIngredient>()
+            };
+
+            foreach (var ingredient in existingRecipe.RecipeIngredients.Select(ri => ri.Ingredient))
+            {
+                newRecipe.RecipeIngredients.Add(new RecipeIngredient { Ingredient = ingredient });
+            }
+
+            if (!string.IsNullOrEmpty(newIngredients))
+            {
+                var newIngredientNames = newIngredients.Split(',').Select(i => i.Trim()).ToList();
+                foreach (var ingredientName in newIngredientNames)
+                {
+                    var ingredient = await _context.Ingredient.FirstOrDefaultAsync(i => i.Name == ingredientName)
+                                     ?? new Ingredient { Name = ingredientName };
+                    newRecipe.RecipeIngredients.Add(new RecipeIngredient { Ingredient = ingredient });
+                }
+            }
+
+            _context.Recipe.Add(newRecipe);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Recipe successfully added.";
+            return RedirectToAction("Index", "Recipe");
+        }
+
+        
+        
+
     }
 }

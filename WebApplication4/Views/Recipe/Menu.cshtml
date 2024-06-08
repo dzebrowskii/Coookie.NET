@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Recipe Options";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="menu">
+    <a href="@Url.Action("AddRecipe", "Recipe")" class="menu-item">Add Your Own Recipe</a>
+    <a href="@Url.Action("AddBasedOnExisting", "Recipe")" class="menu-item">Add a Recipe Based on an Existing One</a>
+    <a href="@Url.Action("Menu", "User")" class="menu-item">Go Back</a>
+</div>
+
+<style>
+    .menu-item {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 20px;
+        background-color: #d9a404;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .menu-item:hover {
+        background-color: #e6c60d;
+    }
+</style>
