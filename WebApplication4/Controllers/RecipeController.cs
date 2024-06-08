@@ -199,7 +199,7 @@ namespace WebApplication4.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                TempData["SuccessMessage"] = "Recipe successfully added.";
+                TempData["newRecipe"] = "Recipe successfully added.";
                 return RedirectToAction("Menu","Recipe");
             }
             return View(recipe);
@@ -301,8 +301,9 @@ namespace WebApplication4.Controllers
 
             _context.Recipe.Add(newRecipe);
             await _context.SaveChangesAsync();
+            TempData["newRecipe"] = "Recipe successfully added.";
 
-            return RedirectToAction("Index", "Recipe");
+            return RedirectToAction("Menu", "Recipe");
         }
 
 

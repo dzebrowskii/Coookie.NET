@@ -3,6 +3,12 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+@if (TempData["newRecipe"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["newRecipe"]
+    </div>
+}
 
 <div class="menu">
     <a href="@Url.Action("AddRecipe", "Recipe")" class="menu-item">Add Your Own Recipe</a>
@@ -24,5 +30,7 @@
 
     .menu-item:hover {
         background-color: #e6c60d;
+        color: white; /* Zmienia kolor tekstu na biały po najechaniu */
+        text-decoration: none;
     }
 </style>
