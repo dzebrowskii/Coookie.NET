@@ -16,7 +16,7 @@ namespace WebApplication4.Controllers
         private readonly RecipeScraper _scraper;
         private readonly UserService _userService;
 
-        // Konstruktor z wstrzykniętym ApplicationDbContext i RecipeScraper
+        
         public RecipeController(ApplicationDbContext context, RecipeScraper scraper, UserService userService)
         {
             _context = context;
@@ -64,13 +64,13 @@ namespace WebApplication4.Controllers
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
 
-                // Dodawanie punktów użytkownikowi za dodanie przepisu
+               
                 var email = User.Identity.Name;
                 var user = await _userService.GetUserByEmailAsync(email);
                 if (user != null)
                 {
                     
-                    user.Points += 20; // Przyznawanie punktów za dodanie przepisu
+                    user.Points += 20; 
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -194,7 +194,7 @@ namespace WebApplication4.Controllers
                 var user = await _userService.GetUserByEmailAsync(email);
                 if (user != null)
                 {
-                    user.Points += 20; // Przyznawanie punktów za dodanie przepisu
+                    user.Points += 20; 
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }

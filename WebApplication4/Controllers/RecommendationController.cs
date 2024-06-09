@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 using WebApplication4.Models;
-using WebApplication4.Services; // Zmodyfikuj to, aby odwoływało się do Twojego modelu użytkownika
+using WebApplication4.Services; 
 
 namespace WebApplication4.Controllers
 {

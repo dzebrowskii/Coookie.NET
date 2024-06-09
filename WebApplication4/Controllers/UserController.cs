@@ -88,9 +88,9 @@ namespace WebApplication4.Controllers
                 var referringUser = await _context.User.FirstOrDefaultAsync(u => u.ReferralCode == user.ReferredBy);
                 if (referringUser != null)
                 {
-                    referringUser.Points += 10; // Przyznawanie punktów polecającemu
-                    user.Points += 5; // Przyznawanie punktów nowemu użytkownikowi
-                    _context.User.Update(referringUser); // Zapisanie zmian w bazie danych
+                    referringUser.Points += 10; 
+                    user.Points += 5; 
+                    _context.User.Update(referringUser);
                 }
             }
 
@@ -334,7 +334,7 @@ namespace WebApplication4.Controllers
                 }
 
                 var token = Guid.NewGuid().ToString();
-                user.ActivationToken = token; // Reusing ActivationToken for simplicity
+                user.ActivationToken = token; 
                 await _context.SaveChangesAsync();
 
                 var resetLink = Url.Action("ChangePassword", "User", new { token = token }, Request.Scheme);

@@ -6,9 +6,9 @@ public class AppRating
 {
     [Key]
     public int? RatingId { get; set; }
-    public int UserId { get; set; }  // Usunięcie [Required] z typu wartościowego
+    public int UserId { get; set; }  
     [Required]
-    public virtual User User { get; set; }  // Zapewnienie obecności obiektu User
+    public virtual User User { get; set; } 
 
     [Required(ErrorMessage = "Rating value is required.")]
     [Range(1, 5, ErrorMessage = "Value must be between 1 and 5")]

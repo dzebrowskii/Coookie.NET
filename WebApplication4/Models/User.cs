@@ -27,11 +27,11 @@ public class User
     
     
     public string? ActivationToken { get; set; }
-    public bool IsActive { get; set; } = false; // Domyślnie konto nieaktywne
+    public bool IsActive { get; set; } = false; 
     
-    public string? ReferralCode { get; set; } // Nowe pole może być null
-    public string? ReferredBy { get; set; } // Nowe pole, może być null
-    public int? Points { get; set; } // Nowe pole może być null
+    public string? ReferralCode { get; set; } 
+    public string? ReferredBy { get; set; } 
+    public int? Points { get; set; } 
     
 
     public virtual ICollection<Recipe> FavoriteRecipes { get; set; } = new List<Recipe>();

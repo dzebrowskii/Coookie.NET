@@ -59,7 +59,7 @@ namespace WebApplication4.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserRanking userRanking)
         {
-            // Dodaj dane bez sprawdzania walidacji
+            
             _context.Add(userRanking);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

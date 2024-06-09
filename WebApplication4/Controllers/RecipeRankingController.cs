@@ -59,7 +59,7 @@ namespace WebApplication4.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RecipeRanking recipeRanking)
         {
-            // Bez sprawdzania ModelState, dodaj obiekt bezpośrednio
+            
             _context.Add(recipeRanking);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -153,7 +153,7 @@ namespace WebApplication4.Controllers
             return _context.RecipeRanking.Any(e => e.RecipeId == id);
         }
         
-        // Akcja do wyświetlania rankingu przepisów
+       
         public async Task<IActionResult> RecipeRanking()
         {
             var recipes = await _context.Recipe

@@ -26,7 +26,7 @@ h2 {
     margin: 20px 0;
 }
 
-/* Animacja dla literek */
+
 @keyframes wave {
     0%, 60%, 100% {
         transform: translateY(0%);
@@ -36,7 +36,7 @@ h2 {
     }
 }
 
-/* Animacja dla złotych pyłków */
+
 @keyframes fall {
     to {
         transform: translateY(100vh);
@@ -59,20 +59,20 @@ h2 {
     margin-top: 5px;
     margin-bottom: 200px;
     font-size: 1.5em;
-    background-color: #cc8400; /* Bardzo ciemny kolor tła przycisku */
+    background-color: #cc8400; 
     color: white;
     text-decoration: none !important;
-    border-radius: 10px; /* Bardziej zaokrąglone rogi */
+    border-radius: 10px; 
     transition: background-color 0.3s;
 }
 
 .start-button:hover {
-    background-color: #b37400; /* Jeszcze ciemniejszy kolor tła przy najechaniu */
+    background-color: #b37400;
     text-decoration: none !important;
     color: white;
 }
 
-/* Stwórz 50 złotych pyłków */
+
 :root {
     --particles: 50;
 }
@@ -112,10 +112,10 @@ body::after {
     background-color: gold;
     border-radius: 50%;
     opacity: 0.6;
-    /* Rozmiar pyłka będzie losowany przez JS */
+    
 }
 
-/* Navbar background color */
+
 .navbar {
     background-color: #FFA500 !important;
     border: none !important;
@@ -128,13 +128,13 @@ body::after {
 
 .footer {
     
-    background-color: #FFA500 !important; /* Dopasowanie tła stopki do reszty strony */
+    background-color: #FFA500 !important; 
     
 }
 
 
 
 .footer span, .footer a {
-    margin-right: 10px; /* Dodanie odstępów między elementami */
+    margin-right: 10px; 
 }
 

@@ -124,7 +124,7 @@ namespace WebApplication4.Controllers
                     })
                     .ToList();
 
-                // Logowanie danych
+                
                 Console.WriteLine("Data to be sent to client:");
                 foreach (var item in analysisData)
                 {
@@ -137,7 +137,7 @@ namespace WebApplication4.Controllers
             }
             catch (Exception ex)
             {
-                // Logowanie wyjątku
+                
                 Console.WriteLine(ex);
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
@@ -153,7 +153,7 @@ namespace WebApplication4.Controllers
                 return NotFound("Analysis data not found.");
             }
 
-            // Deserializacja danych z dodatkowym sprawdzeniem
+            
             var dataList = JsonConvert.DeserializeObject<List<KeyValuePair<string, decimal>>>(jsonData);
             var data = dataList
                 .Where(kvp => !string.IsNullOrEmpty(kvp.Key) && kvp.Value != 0)

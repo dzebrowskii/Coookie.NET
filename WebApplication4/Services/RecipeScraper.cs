@@ -37,7 +37,7 @@ namespace WebApplication4.Services
                     string href = node.GetAttributeValue("href", string.Empty);
                     if (!string.IsNullOrEmpty(href))
                     {
-                        // Dodaj pełny adres URL
+                        
                         links.Add(new Uri(new Uri(url), href).ToString());
                     }
                 }
@@ -49,21 +49,21 @@ namespace WebApplication4.Services
                 HtmlDocument html_recipe_Document = new HtmlDocument();
                 html_recipe_Document.LoadHtml(html_recipe);
 
-                // Recipe name
+                
                 var recipeNameNode = html_recipe_Document.DocumentNode.SelectSingleNode("//h1");
                 string recipeName = recipeNameNode?.InnerText.Trim() ?? "Untitled Recipe";
                 Console.WriteLine(recipeName);
 
-                // Sprawdź, czy przepis już istnieje w bazie danych
+                
                 bool recipeExists = await _context.Recipe.AnyAsync(r => r.Name == recipeName);
                 if (recipeExists)
                 {
-                    continue; // Przejdź do następnego przepisu, jeśli już istnieje
+                    continue; 
                 }
 
                 var ingredientsNodes = html_recipe_Document.DocumentNode.SelectNodes("//div[@itemprop='recipeIngredient']");
                 List<string> recipeIngredients = new List<string>();
-
+                
                 foreach (var x in ingredientsNodes)
                 {
                     string ingredientText = x.InnerText.Trim();
@@ -71,8 +71,9 @@ namespace WebApplication4.Services
                     recipeIngredients.Add(ingredientText);
                     Console.WriteLine(ingredientText);
                 }
-
-                Console.WriteLine(recipeIngredients.Count);
+                List<string> singleWordsIngredients = recipeIngredients
+                    .SelectMany(s => s.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries))
+                    .ToList();
 
                 var recipeInstructionsNodes = html_recipe_Document.DocumentNode.SelectNodes("//div[contains(@class, 'wykonanie instructions')]/p");
                 List<string> recipeInstructions = new List<string>();
@@ -87,15 +88,15 @@ namespace WebApplication4.Services
                 Console.WriteLine(recipeInstructions.Count);
                 Console.WriteLine("--------------------");
 
-                // Połącz instrukcje w jeden ciąg tekstowy
+
                 string combinedInstructions = string.Join("\n", recipeInstructions);
 
-                // Przekształć listę składników na ICollection<RecipeIngredient>
+
                 ICollection<RecipeIngredient> recipeIngredientEntities = new List<RecipeIngredient>();
 
-                foreach (var ingredientName in recipeIngredients)
+                foreach (var ingredientName in singleWordsIngredients)
                 {
-                    // Znajdź lub utwórz składnik
+                    
                     var ingredient = await _context.Ingredient
                         .FirstOrDefaultAsync(i => i.Name == ingredientName);
                     if (ingredient == null)
@@ -105,13 +106,19 @@ namespace WebApplication4.Services
                         await _context.SaveChangesAsync();
                     }
 
-                    // Utwórz RecipeIngredient
-                    recipeIngredientEntities.Add(new RecipeIngredient { Ingredient = ingredient });
+                    
+                    var existingRecipeIngredient = recipeIngredientEntities
+                        .FirstOrDefault(ri => ri.Ingredient.Name == ingredientName);
+                    if (existingRecipeIngredient == null)
+                    {
+                        
+                        recipeIngredientEntities.Add(new RecipeIngredient { Ingredient = ingredient });
+                    }
                 }
                 
                 // Do kalorii
                 var random = new Random();
-                // Utwórz nowy obiekt Recipe i dodaj go do kontekstu
+                
                 Recipe recipe = new Recipe
                 {
                     Name = recipeName,
@@ -125,7 +132,7 @@ namespace WebApplication4.Services
                 _context.Recipe.Add(recipe);
                 await _context.SaveChangesAsync();
 
-                // Zakończ działanie scrappera po zapisaniu pierwszego przepisu
+                
                 Console.WriteLine("Zapisano przepis i zakończono działanie scrappera.");
                 return;
             }

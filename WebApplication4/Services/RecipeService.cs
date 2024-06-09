@@ -29,7 +29,7 @@ namespace WebApplication4.Services
                 return null;
             }
             var matchedRecipes = new List<Recipe>();
-            var ingList = ingredients.ToLower().Split().ToList(); // List of ingredients from input, lowercase
+            var ingList = ingredients.ToLower().Split().ToList(); 
 
             var recipes = await _context.Recipe
                 .Include(r => r.RecipeIngredients)

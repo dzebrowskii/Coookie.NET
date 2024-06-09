@@ -6,37 +6,37 @@ using WebApplication4.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddControllersWithViews();
 
 
-// Dodaj usługę kontekstu bazy danych
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyAzureDb"),
     sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
-// Dodaj konfigurację SMTP
+
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddTransient<EmailService>();
 
-// Rejestrujemy RecipeScraper 
+
 builder.Services.AddScoped<RecipeScraper>();
 
-//Rejestrujemy RecipeService jako scoper service
+
 builder.Services.AddScoped<RecipeService>();
 
-//Rejestracja userService
+
 builder.Services.AddScoped<UserService>();
 
-// Register AnalysisService
+
 builder.Services.AddScoped<AnalysisService>();
 
-//Rejestracja FriendService
+
 builder.Services.AddScoped<FriendService>();
 
 
 
-// Configure authentication and authorization
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>
     {

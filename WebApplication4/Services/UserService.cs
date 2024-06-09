@@ -97,7 +97,7 @@ namespace WebApplication4.Services
             var user = await _context.User.FindAsync(userId);
             if (user != null)
             {
-                user.Points += 5; // Dodaj 5 punktów użytkownikowi za ocenę
+                user.Points += 5; 
                 _context.User.Update(user);
             }
 

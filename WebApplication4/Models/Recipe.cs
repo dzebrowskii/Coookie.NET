@@ -25,8 +25,8 @@ public class Recipe
     // Właściwość dla relacji wiele-do-wielu z User
     public virtual ICollection<User> Users { get; set; } = new List<User>();
         
-    public int? Calories { get; set; } // Kalorie, opcjonalne
-    public decimal? Price { get; set; } // Cena, opcjonalne
+    public int? Calories { get; set; } 
+    public decimal? Price { get; set; } 
     public int? Points { get; set; }
     
     public DateTime? DateSaved { get; set; }

@@ -79,7 +79,7 @@ namespace WebApplication4.Services
                 })
                 .ToDictionary(x => x.Date.ToString("yyyy-MM-dd"), x => x.TotalValue);
 
-            // Logowanie danych
+            
             Console.WriteLine("Analysis Data:");
             foreach (var item in analysisData)
             {
