@@ -87,7 +87,7 @@ Oprócz wyszukiwania przepisów zalogowany użytkownik może także przejść do
 }
 Ta sekcja dodaje połączenie do bazy danych Azure SQL. Dzięki temu aplikacja może łączyć się z bazą danych o nazwie “cookiedb” na serwerze “coookiedb.database.windows.net” przy użyciu podanych danych uwierzytelniających.
 
-```"SmtpSettings": {
+"SmtpSettings": {
   "Server": "smtp.office365.com",
   "Port": 587,
   "SenderName": "Coookie App",
