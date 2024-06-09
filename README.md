@@ -85,3 +85,15 @@ Oprócz wyszukiwania przepisów zalogowany użytkownik może także przejść do
 "ConnectionStrings": {
   "MyAzureDb": "Server=tcp:coookiedb.database.windows.net,1433;Initial Catalog=coookiedb;Persist Security Info=False;User ID=coookieadmin;Password=truten123@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 }
+Ta sekcja dodaje połączenie do bazy danych Azure SQL. Dzięki temu aplikacja może łączyć się z bazą danych o nazwie “cookiedb” na serwerze “coookiedb.database.windows.net” przy użyciu podanych danych uwierzytelniających.
+
+```"SmtpSettings": {
+  "Server": "smtp.office365.com",
+  "Port": 587,
+  "SenderName": "Coookie App",
+  "SenderEmail": "coookieapp@outlook.com",
+  "Username": "coookieapp@outlook.com",
+  "Password": "Truten123"
+}
+
+Ta sekcja dodaje ustawienia serwera SMTP potrzebne do wysyłania wiadomości e-mail.
